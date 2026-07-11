@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#082f27">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="经典斗地主：一名玩家与两名电脑玩家的离线单机棋牌游戏。">
+  <title>经典斗地主 · 单机版</title>
+  <link rel="stylesheet" href="src/styles/base.css">
+  <link rel="stylesheet" href="src/styles/cards.css">
+  <link rel="stylesheet" href="src/styles/game.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+
+  <div class="app-shell" id="app">
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <main id="main-content">
+      <section class="menu-screen" id="menu-screen" aria-labelledby="game-title">
+        <div class="menu-card">
+          <header class="brand-block">
+            <div class="brand-cards" aria-hidden="true">
+              <span class="brand-card brand-card-black">♠</span>
+              <span class="brand-card brand-card-red">♥</span>
+              <span class="brand-card brand-card-gold">★</span>
+            </div>
+            <p class="eyebrow">离线单机 · 三人对局</p>
+            <h1 id="game-title">经典斗地主</h1>
+            <p class="menu-intro">一副牌，一张青毡桌。与两位电脑玩家完成一场纯粹的经典对局。</p>
+          </header>
+
+          <fieldset class="difficulty-fieldset" id="difficulty-options">
+            <legend>选择电脑难度</legend>
+            <div class="difficulty-options">
+              <label class="difficulty-option" for="difficulty-easy">
+                <input type="radio" id="difficulty-easy" name="difficulty" value="easy">
+                <span class="difficulty-copy">
+                  <strong>简单</strong>
+                  <small>出牌直接，适合熟悉规则</small>
+                </span>
+              </label>
+              <label class="difficulty-option" for="difficulty-normal">
+                <input type="radio" id="difficulty-normal" name="difficulty" value="normal" checked>
+                <span class="difficulty-copy">
+                  <strong>普通</strong>
+                  <small>保护牌型，也会照顾队友</small>
+                </span>
+                <span class="recommended-tag">推荐</span>
+              </label>
+              <label class="difficulty-option" for="difficulty-hard">
+                <input type="radio" id="difficulty-hard" name="difficulty" value="hard">
+                <span class="difficulty-copy">
+                  <strong>困难</strong>
+                  <small>更重视残局、拦截与配合</small>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="menu-actions">
+            <button class="button button-primary button-large" id="start-game" type="button">
+              <span aria-hidden="true">▶</span>
+              开始新对局
+            </button>
+            <button class="button button-secondary" id="open-rules" type="button">
+              <span aria-hidden="true">?</span>
+              游戏规则
+            </button>
+          </div>
+
+          <div class="quick-settings" aria-label="声音快捷设置">
+            <label class="switch-control" for="menu-sound">
+              <span class="switch-copy">
+                <span aria-hidden="true">♪</span>
+                <span>游戏音效</span>
+              </span>
+              <input class="switch-input" id="menu-sound" type="checkbox" role="switch" checked>
+              <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+            </label>
+            <label class="switch-control" for="menu-music">
+              <span class="switch-copy">
+                <span aria-hidden="true">♫</span>
+                <span>背景音乐</span>
+              </span>
+              <input class="switch-input" id="menu-music" type="checkbox" role="switch">
+              <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+            </label>
+            <button class="icon-text-button" id="open-settings" type="button" aria-haspopup="dialog">
+              <span aria-hidden="true">⚙</span>
+              设置
+            </button>
+          </div>
+
+          <p class="privacy-note">无需登录 · 不含真钱与支付 · 不收集个人信息</p>
+        </div>
+      </section>
+
+      <section class="game-screen" id="game-screen" aria-label="斗地主牌桌" hidden>
+        <header class="game-hud">
+          <div class="hud-actions hud-actions-left">
+            <button class="hud-button" id="back-menu" type="button" aria-label="返回主菜单">
+              <span aria-hidden="true">←</span>
+              <span class="hud-button-label">主菜单</span>
+            </button>
+            <button class="hud-button" id="restart-game" type="button" aria-label="重新开始本局">
+              <span aria-hidden="true">↻</span>
+              <span class="hud-button-label">重新开始</span>
+            </button>
+          </div>
+
+          <div class="round-status" aria-label="当前对局状态">
+            <span class="phase-chip" id="phase-chip">准备开始</span>
+            <span class="bid-summary" id="bid-summary">等待发牌</span>
+          </div>
+
+          <div class="hud-actions hud-actions-right">
+            <span class="difficulty-badge" id="game-difficulty" aria-label="当前难度">普通</span>
+            <button class="hud-button hud-button-icon audio-toggle" id="game-sound" type="button" aria-label="音效已开启" aria-pressed="true">
+              <span aria-hidden="true">♪</span>
+            </button>
+            <button class="hud-button hud-button-icon audio-toggle" id="game-music" type="button" aria-label="背景音乐已关闭" aria-pressed="false">
+              <span aria-hidden="true">♫</span>
+            </button>
+            <button class="hud-button hud-button-icon rules-hud-button" id="open-rules-game" type="button" aria-label="打开游戏规则" aria-haspopup="dialog">
+              <span aria-hidden="true">?</span>
+            </button>
+            <button class="hud-button hud-button-icon" id="open-settings-game" type="button" aria-label="打开设置" aria-haspopup="dialog">
+              <span aria-hidden="true">⚙</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="table-surface" id="game-table">
+          <div class="table-rail" aria-hidden="true"></div>
+
+          <section class="bottom-card-zone" aria-labelledby="bottom-card-title">
+            <div class="zone-heading">
+              <span id="bottom-card-title">地主底牌</span>
+              <span class="zone-note" id="bottom-label">底牌待揭晓</span>
+            </div>
+            <div class="bottom-cards card-row" id="bottom-cards" role="group" aria-label="三张地主底牌"></div>
+          </section>
+
+          <article class="player-seat ai-seat seat-left" id="player-1" data-player-index="1" aria-label="左侧电脑玩家">
+            <div class="player-halo" aria-hidden="true"></div>
+            <div class="avatar" data-field="avatar" aria-hidden="true">竹</div>
+            <div class="player-details">
+              <div class="player-name-row">
+                <h2 class="player-name" data-field="name">阿竹</h2>
+                <span class="role-badge is-pending" data-field="role">待定</span>
+              </div>
+              <p class="card-count"><strong data-field="count">17 张</strong></p>
+              <p class="player-status" data-field="status">等待中</p>
+            </div>
+            <div class="opponent-card-fan" data-field="cards" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="bid-bubble" data-field="action" hidden>不叫</span>
+            <span class="turn-indicator" data-field="active" aria-hidden="true">行动中</span>
+          </article>
+
+          <article class="player-seat ai-seat seat-right" id="player-2" data-player-index="2" aria-label="右侧电脑玩家">
+            <div class="player-halo" aria-hidden="true"></div>
+            <div class="avatar" data-field="avatar" aria-hidden="true">满</div>
+            <div class="player-details">
+              <div class="player-name-row">
+                <h2 class="player-name" data-field="name">小满</h2>
+                <span class="role-badge is-pending" data-field="role">待定</span>
+              </div>
+              <p class="card-count"><strong data-field="count">17 张</strong></p>
+              <p class="player-status" data-field="status">等待中</p>
+            </div>
+            <div class="opponent-card-fan" data-field="cards" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="bid-bubble" data-field="action" hidden>不叫</span>
+            <span class="turn-indicator" data-field="active" aria-hidden="true">行动中</span>
+          </article>
+
+          <section class="table-center" aria-label="牌桌中央">
+            <p class="table-message" id="table-message" aria-live="polite">正在准备牌桌…</p>
+            <div class="last-play" id="last-play">
+              <p class="last-play-label" id="last-play-label">等待首轮出牌</p>
+              <div class="last-play-cards card-row" id="last-play-cards" role="group" aria-label="上一手出的牌"></div>
+            </div>
+          </section>
+
+          <article class="player-seat human-seat" id="player-0" data-player-index="0" aria-label="你的玩家信息">
+            <div class="player-halo" aria-hidden="true"></div>
+            <div class="avatar" data-field="avatar" aria-hidden="true">你</div>
+            <div class="player-details">
+              <div class="player-name-row">
+                <h2 class="player-name" data-field="name">你</h2>
+                <span class="role-badge is-pending" data-field="role">待定</span>
+              </div>
+              <p class="card-count"><strong data-field="count">17 张</strong></p>
+              <p class="player-status" data-field="status">等待中</p>
+            </div>
+            <span class="bid-bubble" data-field="action" hidden>不叫</span>
+            <span class="turn-indicator" data-field="active" aria-hidden="true">轮到你</span>
+          </article>
+
+          <section class="interaction-zone" aria-label="玩家操作">
+            <p class="selection-status" id="selection-status" aria-live="polite">等待发牌</p>
+
+            <div class="action-bar bidding-actions" id="bidding-actions" aria-label="叫地主操作" hidden>
+              <button class="button button-ghost bid-button" type="button" data-bid="0">不叫</button>
+              <button class="button button-secondary bid-button" type="button" data-bid="1">1 分</button>
+              <button class="button button-secondary bid-button" type="button" data-bid="2">2 分</button>
+              <button class="button button-primary bid-button" type="button" data-bid="3">3 分</button>
+            </div>
+
+            <div class="action-bar playing-actions" id="playing-actions" aria-label="出牌操作" hidden>
+              <button class="button button-ghost" id="sort-hand" type="button">
+                <span aria-hidden="true">⇅</span>
+                <span data-label>理牌</span>
+              </button>
+              <button class="button button-secondary" id="hint-play" type="button">
+                <span aria-hidden="true">◇</span>
+                <span>提示</span>
+              </button>
+              <button class="button button-danger" id="pass-play" type="button">不出</button>
+              <button class="button button-primary" id="submit-play" type="button" disabled>出牌</button>
+            </div>
+          </section>
+
+          <section class="hand-zone" aria-labelledby="hand-title">
+            <h2 class="sr-only" id="hand-title">你的手牌</h2>
+            <div class="human-hand" id="human-hand" role="group" aria-label="你的手牌，点击选择或取消选择"></div>
+          </section>
+
+          <p class="rotate-hint" aria-hidden="true">横屏体验更佳</p>
+          <div class="fx-layer" id="fx-layer" aria-hidden="true"></div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+    <div class="sr-only" id="screen-reader-status" role="status" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <dialog class="game-dialog modal-shell rules-dialog" id="modal-rules" aria-labelledby="rules-title">
+    <form method="dialog" class="dialog-shell">
+      <header class="dialog-header">
+        <div>
+          <p class="dialog-eyebrow">快速上手</p>
+          <h2 id="rules-title">游戏规则</h2>
+        </div>
+        <button class="dialog-close" type="submit" value="close" data-close-modal="modal-rules" aria-label="关闭游戏规则">×</button>
+      </header>
+      <div class="dialog-body rules-content">
+        <section>
+          <h3>目标与身份</h3>
+          <p>三名玩家使用 54 张牌。叫分最高者成为地主并获得三张底牌，另外两人为农民。地主或任一农民阵营率先出完手牌即获胜。</p>
+        </section>
+        <section>
+          <h3>叫地主</h3>
+          <p>依次选择不叫、1 分、2 分或 3 分。后叫者只能选择更高分；有人叫 3 分会立即成为地主。若三人都不叫，将重新洗牌。</p>
+        </section>
+        <section>
+          <h3>出牌顺序</h3>
+          <p>地主先出。跟牌必须使用相同牌型、相同长度并且牌力更大；炸弹可压普通牌，王炸最大。连续两人不出后，上一位成功出牌者重新自由出牌。</p>
+        </section>
+        <section>
+          <h3>支持牌型</h3>
+          <div class="rule-tags" aria-label="支持的牌型">
+            <span>单张</span><span>对子</span><span>三张</span><span>三带一</span><span>三带二</span>
+            <span>顺子</span><span>连对</span><span>飞机</span><span>飞机带单牌</span><span>飞机带对子</span>
+            <span>四带二单</span><span>四带二对</span><span>炸弹</span><span>王炸</span>
+          </div>
+          <ul>
+            <li>顺子至少五张，连对至少三对，飞机至少两组连续三张。</li>
+            <li>顺子、连对和飞机主体均不能包含 2 或大小王。</li>
+            <li>点击手牌进行选择；选中的牌会抬起。可用“提示”寻找一组合法出牌。</li>
+          </ul>
+        </section>
+      </div>
+      <footer class="dialog-footer">
+        <button class="button button-primary" type="submit" value="close" data-close-modal="modal-rules">知道了</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="game-dialog modal-shell settings-dialog" id="modal-settings" aria-labelledby="settings-title">
+    <form method="dialog" class="dialog-shell" id="settings-form">
+      <header class="dialog-header">
+        <div>
+          <p class="dialog-eyebrow">按你的习惯游玩</p>
+          <h2 id="settings-title">游戏设置</h2>
+        </div>
+        <button class="dialog-close" type="submit" value="cancel" data-close-modal="modal-settings" aria-label="关闭游戏设置">×</button>
+      </header>
+      <div class="dialog-body settings-content">
+        <label class="setting-row" for="setting-sound">
+          <span><strong>游戏音效</strong><small>点击、出牌和胜负提示音</small></span>
+          <input class="switch-input" id="setting-sound" type="checkbox" role="switch" checked>
+          <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+        </label>
+        <label class="setting-row" for="setting-music">
+          <span><strong>背景音乐</strong><small>首次操作后开始播放</small></span>
+          <input class="switch-input" id="setting-music" type="checkbox" role="switch">
+          <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+        </label>
+        <label class="setting-row" for="setting-animations">
+          <span><strong>桌面动画</strong><small>发牌、出牌和特殊牌型反馈</small></span>
+          <input class="switch-input" id="setting-animations" type="checkbox" role="switch" checked>
+          <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+        </label>
+        <label class="volume-setting" for="setting-volume">
+          <span><strong>音量</strong><output id="setting-volume-value" for="setting-volume">50%</output></span>
+          <input id="setting-volume" type="range" min="0" max="100" step="5" value="50">
+        </label>
+      </div>
+      <footer class="dialog-footer">
+        <button class="button button-ghost" type="submit" value="cancel" data-close-modal="modal-settings">取消</button>
+        <button class="button button-primary" id="save-settings" type="submit" value="save">保存设置</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="game-dialog modal-shell confirm-dialog" id="modal-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <form method="dialog" class="dialog-shell dialog-shell-small">
+      <div class="confirm-icon" aria-hidden="true">!</div>
+      <h2 id="confirm-title" data-confirm="title">结束当前对局？</h2>
+      <p id="confirm-message" data-confirm="body">当前进度不会保留，确定要返回主菜单吗？</p>
+      <footer class="dialog-footer dialog-footer-split">
+        <button class="button button-ghost" id="confirm-cancel" type="submit" value="cancel">继续对局</button>
+        <button class="button button-danger" id="confirm-ok" type="submit" value="confirm">确定</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="game-dialog modal-shell result-dialog" id="modal-result" aria-labelledby="result-title" aria-describedby="result-message">
+    <div class="dialog-shell dialog-shell-small result-shell modal-card">
+      <div class="result-emblem" id="result-emblem" aria-hidden="true">★</div>
+      <p class="dialog-eyebrow" id="result-kicker">本局结束</p>
+      <h2 id="result-title" data-result="title">恭喜获胜</h2>
+      <p id="result-message" data-result="summary">你所在的阵营率先出完了手牌。</p>
+      <p class="result-detail" data-result="detail">你的身份与本局详情将在这里显示。</p>
+      <div class="dialog-footer dialog-footer-stacked">
+        <button class="button button-primary button-large" id="result-restart" type="button">再来一局</button>
+        <button class="button button-ghost" id="result-menu" type="button">返回主菜单</button>
+      </div>
+    </div>
+  </dialog>
+
+  <noscript>
+    <div class="noscript-message">这个游戏需要启用 JavaScript 才能运行。请启用后刷新页面。</div>
+  </noscript>
+
+  <!-- 经典脚本按依赖顺序加载；所有模块都挂载到 globalThis.DDZ。 -->
+  <script defer src="src/game/cards.js"></script>
+  <script defer src="src/game/deck.js"></script>
+  <script defer src="src/game/hand-analyzer.js"></script>
+  <script defer src="src/game/hand-comparator.js"></script>
+  <script defer src="src/game/rules.js"></script>
+  <script defer src="src/ai/strategies.js"></script>
+  <script defer src="src/ai/ai-player.js"></script>
+  <script defer src="src/game/game-state.js"></script>
+  <script defer src="src/ui/audio.js"></script>
+  <script defer src="src/ui/animations.js"></script>
+  <script defer src="src/ui/renderer.js"></script>
+  <script defer src="src/ui/interactions.js"></script>
+  <script defer src="src/game/game-controller.js"></script>
+  <script defer src="src/main.js"></script>
+</body>
+</html>
