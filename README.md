@@ -110,6 +110,7 @@ node --test tests/rules.test.js tests/comparator.test.js tests/ai.test.js tests/
 │  ├─ ui/                    渲染、交互、动画和程序音频
 │  └─ styles/                基础、卡牌和牌桌响应式样式
 ├─ tests/                    规则、比较、AI 和流程测试
+├─ scripts/build-sites.js   Sites 托管适配（不影响直接打开）
 ├─ docs/
 │  ├─ game-rules.md          本项目实际规则口径
 │  ├─ github-research.md     GitHub 候选、许可证与设计调研
@@ -117,7 +118,7 @@ node --test tests/rules.test.js tests/comparator.test.js tests/ai.test.js tests/
 ├─ output/playwright/        浏览器验收脚本与截图
 ├─ AGENTS.md                 协作与工程约定
 ├─ LICENSE                   本项目 MIT 许可证
-└─ package.json              零依赖测试脚本
+└─ package.json              零依赖测试与托管构建脚本
 ```
 
 ## GitHub 案例调研
