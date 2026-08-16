@@ -6,12 +6,21 @@
   class Animator {
     constructor() {
       this.enabled = true;
+      this.fxToken = 0;
       this.reducedMotion = global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
 
     setEnabled(value) {
       this.enabled = Boolean(value);
       document.documentElement.classList.toggle('animations-off', !this.enabled);
+      if (!this.enabled) {
+        this.fxToken += 1;
+        const layer = document.getElementById('fx-layer');
+        if (layer) {
+          layer.classList.remove('fx-bomb', 'fx-rocket', 'fx-plane');
+          layer.replaceChildren();
+        }
+      }
     }
 
     _pulse(element, className, duration) {
@@ -23,28 +32,57 @@
     }
 
     deal() {
+      const table = document.getElementById('game-table');
+      if (table) table.classList.remove('result-win', 'result-lose');
       this._pulse(document.getElementById('game-table'), 'is-dealing', 950);
     }
 
-    play() {
-      this._pulse(document.getElementById('last-play-cards'), 'cards-enter', 320);
+    play(playerIndex) {
+      this._pulse(document.getElementById(`play-zone-${Number.isInteger(playerIndex) ? playerIndex : 0}`), 'cards-enter', 420);
     }
 
     special(pattern) {
-      if (!pattern || !['bomb', 'rocket'].includes(pattern.type)) return;
+      if (!pattern || !this.enabled) return;
+      let kind = null;
+      if (pattern.type === 'rocket') kind = 'rocket';
+      else if (pattern.type === 'bomb') kind = 'bomb';
+      else if (String(pattern.type).startsWith('plane')) kind = 'plane';
+      if (!kind) return;
+
       const layer = document.getElementById('fx-layer');
       const table = document.getElementById('game-table');
-      if (layer) layer.textContent = pattern.type === 'rocket' ? '王 炸' : '炸 弹';
-      this._pulse(layer, 'fx-burst', 650);
-      this._pulse(table, 'table-shake', 430);
+      if (!layer) return;
+      const token = ++this.fxToken;
+      layer.classList.remove('fx-bomb', 'fx-rocket', 'fx-plane');
+      layer.replaceChildren();
+      const visual = document.createElement('span');
+      visual.className = `fx-visual fx-visual-${kind}`;
+      visual.textContent = kind === 'rocket' ? '🚀' : (kind === 'bomb' ? '💣' : '✈️');
+      const word = document.createElement('strong');
+      word.className = 'fx-special-word';
+      word.textContent = kind === 'rocket' ? '王炸！火箭升空' : (kind === 'bomb' ? '炸弹！' : '飞机起飞！');
+      layer.append(visual, word);
+      void layer.offsetWidth;
+      layer.classList.add(`fx-${kind}`);
+      if (kind !== 'plane') this._pulse(table, 'table-shake', 560);
+      global.setTimeout(() => {
+        if (token !== this.fxToken) return;
+        layer.classList.remove(`fx-${kind}`);
+        layer.replaceChildren();
+      }, kind === 'rocket' ? 1550 : 1250);
     }
 
     invalid() {
       this._pulse(document.getElementById('human-hand'), 'hand-shake', 360);
     }
 
-    result() {
-      this._pulse(document.querySelector('#modal-result .modal-card'), 'result-pop', 420);
+    result(humanWon) {
+      const table = document.getElementById('game-table');
+      if (table) {
+        table.classList.toggle('result-win', Boolean(humanWon));
+        table.classList.toggle('result-lose', !humanWon);
+      }
+      this._pulse(document.querySelector('#modal-result .modal-card'), 'result-pop', 520);
     }
   }
 

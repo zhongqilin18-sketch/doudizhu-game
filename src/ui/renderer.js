@@ -2,37 +2,38 @@
   'use strict';
 
   const DDZ = (global.DDZ = global.DDZ || {});
-
   const PHASE_NAMES = Object.freeze({
     menu: '主菜单',
     bidding: '叫地主',
+    doubling: '选择倍率',
+    landlordReveal: '地主揭晓',
     playing: '出牌中',
-    finished: '本局结束'
+    finished: '结算展示'
   });
-
   const DIFFICULTY_NAMES = Object.freeze({ easy: '简单', normal: '普通', hard: '困难' });
 
-  function byId(id) {
-    return document.getElementById(id);
-  }
-
-  function setText(element, value) {
-    if (element) element.textContent = value == null ? '' : String(value);
-  }
-
-  function field(panel, name) {
-    return panel ? panel.querySelector(`[data-field="${name}"]`) : null;
-  }
-
+  function byId(id) { return document.getElementById(id); }
+  function setText(element, value) { if (element) element.textContent = value == null ? '' : String(value); }
+  function field(panel, name) { return panel ? panel.querySelector(`[data-field="${name}"]`) : null; }
   function roleName(role) {
     if (role === 'landlord') return '地主';
     if (role === 'farmer') return '农民';
     return '身份待定';
   }
-
-  function cardAria(card, selected) {
-    return `${card.displayName}，${selected ? '已选中' : '未选中'}`;
+  function multiplierActionLabel(multiplier) {
+    if (multiplier === 3) return '超级加倍';
+    if (multiplier === 2) return '加倍';
+    if (multiplier === 1) return '不加倍';
+    return '';
   }
+  function playerActionLabel(state, player) {
+    if (state.phase === 'bidding' && player.bid !== null) return player.bid === 0 ? '不叫' : `${player.bid} 分`;
+    if (['doubling', 'landlordReveal'].includes(state.phase) && player.multiplier !== null) return multiplierActionLabel(player.multiplier);
+    if (state.phase === 'playing' && player.lastAction === '不出') return '不出';
+    return '';
+  }
+  function formatCoins(value) { return Math.trunc(Number(value) || 0).toLocaleString('zh-CN'); }
+  function cardAria(card, selected) { return `${card.displayName}，${selected ? '已选中' : '未选中'}`; }
 
   class Renderer {
     constructor() {
@@ -63,9 +64,12 @@
         'playing-card',
         card.color === 'red' ? 'is-red' : 'is-black',
         isJoker ? 'is-joker' : '',
+        isJoker && card.rank === 17 ? 'is-big-joker' : '',
         config.compact ? 'is-compact' : '',
+        config.micro ? 'is-micro' : '',
         config.selected ? 'is-selected' : ''
       ].filter(Boolean).join(' ');
+      element.dataset.rank = String(card.rank);
       if (interactive) {
         element.type = 'button';
         element.dataset.cardId = card.id;
@@ -92,11 +96,9 @@
         const suit = document.createElement('span');
         suit.textContent = card.symbol;
         top.append(rank, suit);
-
         const center = document.createElement('span');
         center.className = 'card-suit-center';
         center.textContent = card.symbol;
-
         const bottom = top.cloneNode(true);
         bottom.className = 'card-corner card-corner-bottom';
         element.append(top, center, bottom);
@@ -108,29 +110,68 @@
       const card = document.createElement('div');
       card.className = `playing-card card-back${compact ? ' is-compact' : ''}`;
       card.setAttribute('aria-label', '牌背');
-      card.innerHTML = '<span class="card-back-mark" aria-hidden="true">云</span>';
+      card.innerHTML = '<span class="card-back-mark" aria-hidden="true">麟</span>';
       return card;
     }
 
     render(state, view) {
       this.showScreen(state.phase === 'menu' ? 'menu' : 'game');
+      this.renderMenu(state);
       if (state.phase === 'menu') return;
 
       setText(byId('phase-chip'), PHASE_NAMES[state.phase] || state.phase);
+      this.renderAutomation(view);
       setText(byId('game-difficulty'), DIFFICULTY_NAMES[state.difficulty] || '普通');
-      const bidText = state.phase === 'bidding'
-        ? `当前最高 ${state.highestBid || '无人叫分'}`
-        : `本局叫分 ${state.highestBid || 1} 分`;
-      setText(byId('bid-summary'), bidText);
-      setText(byId('table-message'), view.thinking || state.message);
-
+      const multiplierSummary = state.players.map((player) => player.multiplier ? `×${player.multiplier}` : '待选').join(' / ');
+      setText(byId('bid-summary'), state.phase === 'bidding'
+        ? `底注 100 · 当前最高 ${state.highestBid ? `${state.highestBid} 分` : '无人叫分'}`
+        : `底注 100 · ${state.highestBid || 1} 分 · ${multiplierSummary}`);
       this.renderBottomCards(state);
+      this.renderCardCounter(state, view);
+      const finished = state.phase === 'finished';
+      const handZone = byId('hand-zone');
+      const interactionZone = byId('interaction-zone');
+      if (handZone) handZone.hidden = finished;
+      if (interactionZone) interactionZone.hidden = finished;
+      const restartButton = byId('restart-game');
+      if (restartButton) restartButton.disabled = finished && state.players.some((player) => player.coins <= 0);
       state.players.forEach((player, index) => this.renderPlayer(state, player, index, view));
-      this.renderLastPlay(state);
+      this.renderTurnPointer(state);
       this.renderHumanHand(state, view);
       this.renderControls(state, view);
       this.renderSelection(state, view);
+      this.renderPhaseOverlay(state, view);
       this.renderResult(state);
+    }
+
+    renderAutomation(view) {
+      const enabled = Boolean(view.autoPlay);
+      const screen = byId('game-screen');
+      const button = byId('toggle-autoplay');
+      const indicator = byId('autoplay-indicator');
+      if (screen) screen.classList.toggle('is-autoplay', enabled);
+      if (button) {
+        button.classList.toggle('is-active', enabled);
+        button.setAttribute('aria-pressed', String(enabled));
+        button.setAttribute('aria-label', enabled ? '关闭电脑托管' : '开启电脑托管');
+      }
+      if (indicator) indicator.hidden = !enabled;
+    }
+
+    renderMenu(state) {
+      const human = state.players[0];
+      setText(byId('menu-coin-value'), formatCoins(human ? human.coins : 0));
+      const blocked = state.players.some((player) => player.coins <= 0);
+      const start = byId('start-game');
+      if (start) {
+        start.disabled = blocked;
+        start.setAttribute('aria-describedby', blocked ? 'bankrupt-message' : 'menu-wallet');
+      }
+      const warning = byId('bankrupt-message');
+      if (warning) {
+        warning.hidden = !blocked;
+        setText(warning, blocked ? '有玩家的麒麟币已用完，请在设置中重置后继续。' : '');
+      }
     }
 
     renderBottomCards(state) {
@@ -144,17 +185,37 @@
         for (let index = 0; index < 3; index += 1) container.appendChild(this.createCardBack(true));
         container.setAttribute('aria-label', '三张地主底牌，尚未揭晓');
       }
-      const label = byId('bottom-label');
-      setText(label, state.bottomRevealed ? '已揭晓' : '待揭晓');
+      setText(byId('bottom-label'), state.bottomRevealed ? '已揭晓' : '待揭晓');
+    }
+
+    renderCardCounter(state, view) {
+      const counter = byId('card-counter');
+      const list = byId('card-counter-list');
+      if (!counter || !list) return;
+      const visible = Boolean(view.settings.cardCounter) && ['doubling', 'landlordReveal', 'playing', 'finished'].includes(state.phase);
+      counter.hidden = !visible;
+      list.replaceChildren();
+      if (!visible) return;
+      view.cardCounter.forEach((entry) => {
+        const chip = document.createElement('span');
+        chip.className = `counter-chip${entry.count === 0 ? ' is-zero' : ''}`;
+        chip.innerHTML = `<strong>${entry.label}</strong><b>${entry.count}</b>`;
+        chip.setAttribute('aria-label', `${entry.label}还剩${entry.count}张`);
+        list.appendChild(chip);
+      });
     }
 
     renderPlayer(state, player, index, view) {
       const panel = byId(`player-${index}`);
       if (!panel) return;
-      panel.classList.toggle('is-active', state.currentPlayer === index && state.phase !== 'finished');
+      const active = state.currentPlayer === index && ['bidding', 'playing'].includes(state.phase);
+      panel.classList.toggle('is-active', active);
       panel.classList.toggle('is-landlord', player.role === 'landlord');
-      panel.classList.toggle('is-thinking', Boolean(view.thinking) && state.currentPlayer === index);
+      panel.classList.toggle('is-thinking', Boolean(view.thinking) && active);
+      panel.setAttribute('aria-current', String(active));
       setText(field(panel, 'name'), player.name);
+      setText(field(panel, 'coins'), formatCoins(player.coins));
+
       const roleElement = field(panel, 'role');
       setText(roleElement, roleName(player.role));
       if (roleElement) {
@@ -164,40 +225,107 @@
         roleElement.dataset.role = player.role || 'pending';
       }
       setText(field(panel, 'count'), `${player.hand.length} 张`);
+
       const status = field(panel, 'status');
-      if (state.phase === 'finished') setText(status, '本局结束');
-      else if (state.currentPlayer === index) setText(status, view.thinking ? '思考中' : (player.isHuman ? '请出牌' : '行动中'));
+      if (state.phase === 'finished') setText(status, state.winner === index ? '本局胜方' : '展示余牌');
+      else if (state.phase === 'doubling') setText(status, player.multiplier ? `已选${multiplierActionLabel(player.multiplier)}` : '选择倍率中');
+      else if (active) setText(status, view.autoPlay && player.isHuman ? '电脑托管中' : (view.thinking ? '思考中' : `轮到${player.name}`));
       else setText(status, '等待中');
-      const action = player.lastAction || (player.bid !== null ? (player.bid === 0 ? '不叫' : `${player.bid}分`) : '');
-      setText(field(panel, 'action'), action);
+
       const actionElement = field(panel, 'action');
+      const action = playerActionLabel(state, player);
+      setText(actionElement, action);
       if (actionElement) actionElement.hidden = !action;
+
+      const crown = field(panel, 'crown');
+      if (crown) crown.hidden = player.role !== 'landlord';
       const activeText = field(panel, 'active');
-      setText(activeText, state.currentPlayer === index && state.phase !== 'finished' ? '行动中' : '');
+      setText(activeText, active ? (state.phase === 'bidding' ? '叫分' : '行动中') : '');
 
       const backs = field(panel, 'cards');
       if (backs && !player.isHuman) {
         backs.replaceChildren();
-        const visible = Math.min(7, player.hand.length);
-        for (let cardIndex = 0; cardIndex < visible; cardIndex += 1) backs.appendChild(this.createCardBack(true));
+        backs.setAttribute('aria-label', `${player.name}剩余${player.hand.length}张牌`);
+        for (let cardIndex = 0; cardIndex < player.hand.length; cardIndex += 1) {
+          const back = this.createCardBack(true);
+          back.style.setProperty('--back-index', String(cardIndex));
+          backs.appendChild(back);
+        }
       }
+      this.renderPlayZone(state, player, index, view);
     }
 
-    renderLastPlay(state) {
-      const label = byId('last-play-label');
-      const container = byId('last-play-cards');
-      if (!container) return;
-      container.replaceChildren();
-      if (!state.lastPlay) {
-        setText(label, state.phase === 'playing' ? '新一轮 · 可自由出牌' : '等待地主产生');
-        container.classList.add('is-empty');
+    renderTurnPointer(state) {
+      const pointer = byId('turn-pointer');
+      if (!pointer) return;
+      let playerIndex = null;
+      let label = '';
+      if (['bidding', 'playing'].includes(state.phase) && Number.isInteger(state.currentPlayer)) {
+        playerIndex = state.currentPlayer;
+        label = state.phase === 'bidding'
+          ? `轮到 ${state.players[playerIndex].name} 叫分`
+          : `轮到 ${state.players[playerIndex].name} 出牌`;
+      } else if (state.phase === 'landlordReveal' && Number.isInteger(state.landlordIndex)) {
+        playerIndex = state.landlordIndex;
+        label = `${state.players[playerIndex].name} 是本局地主`;
+      }
+      pointer.hidden = !Number.isInteger(playerIndex);
+      if (!Number.isInteger(playerIndex)) {
+        pointer.dataset.player = '';
+        pointer.dataset.phase = '';
         return;
       }
-      container.classList.remove('is-empty');
-      const player = state.players[state.lastPlay.playerIndex];
-      setText(label, `${player.name} · ${state.lastPlay.pattern.name}`);
-      const compact = state.lastPlay.cards.length > 10;
-      state.lastPlay.cards.forEach((card) => container.appendChild(this.createCard(card, { compact })));
+      pointer.dataset.player = String(playerIndex);
+      pointer.dataset.phase = state.phase;
+      setText(pointer.querySelector('[data-turn-pointer-label]'), label);
+      pointer.setAttribute('aria-label', label);
+    }
+
+    renderPlayZone(state, player, index, view) {
+      const container = byId(`play-zone-${index}`);
+      if (!container) return;
+      container.replaceChildren();
+      const reveal = state.phase === 'finished';
+      const cards = reveal && state.winner === index ? (player.playedCards || []) : (reveal ? player.hand : (player.playedCards || []));
+      container.classList.toggle('is-revealed-hand', reveal);
+      container.classList.toggle('is-empty', cards.length === 0);
+      const showTimer = state.phase === 'playing' && state.currentPlayer === index && Number.isFinite(view.turnSeconds);
+      if (showTimer) {
+        const timer = document.createElement('span');
+        timer.className = `play-zone-countdown${view.turnSeconds <= 5 ? ' is-urgent' : ''}`;
+        timer.id = `turn-timer-${index}`;
+        timer.textContent = String(view.turnSeconds);
+        const startAngle = Math.max(0, Math.min(360, view.turnSeconds / 20 * 360));
+        const endAngle = Math.max(0, Math.min(360, (view.turnSeconds - 1) / 20 * 360));
+        timer.style.setProperty('--turn-angle', `${startAngle}deg`);
+        timer.style.setProperty('--turn-next-angle', `${endAngle}deg`);
+        timer.setAttribute('aria-label', `剩余${view.turnSeconds}秒`);
+        container.appendChild(timer);
+      }
+      const mobileAction = playerActionLabel(state, player);
+      if (mobileAction && !showTimer) {
+        const action = document.createElement('strong');
+        action.className = 'mobile-action-bubble';
+        action.textContent = mobileAction;
+        container.appendChild(action);
+      }
+      if (cards.length) {
+        const label = document.createElement('span');
+        label.className = 'play-zone-label';
+        if (reveal && state.winner === index) label.textContent = `${player.name}最后一手`;
+        else if (reveal) label.textContent = `${player.name}剩余 ${cards.length} 张`;
+        else if (!['single', 'pair'].includes(player.lastPatternType)) label.textContent = player.lastAction || '已出牌';
+        if (label.textContent) container.appendChild(label);
+        const row = document.createElement('div');
+        row.className = 'personal-card-row';
+        cards.forEach((card) => row.appendChild(this.createCard(card, { micro: cards.length > 10, compact: cards.length <= 10 })));
+        container.appendChild(row);
+      } else if (reveal && state.winner === index) {
+        const winner = document.createElement('strong');
+        winner.className = 'winner-empty-hand';
+        winner.textContent = '已出完 · 胜方';
+        container.appendChild(winner);
+      }
     }
 
     renderHumanHand(state, view) {
@@ -207,8 +335,10 @@
         : null;
       this.handElement.replaceChildren();
       const player = state.players[0];
-      const sorted = DDZ.Cards.sortCards(player.hand, view.sortMode);
-      const canSelect = state.phase === 'playing' && state.currentPlayer === 0;
+      const sorted = DDZ.Cards.sortCards(player.hand, 'rank');
+      this.handElement.classList.toggle('is-compact', sorted.length >= 18);
+      this.handElement.classList.toggle('is-ultra-compact', sorted.length >= 20);
+      const canSelect = state.phase === 'playing' && state.currentPlayer === 0 && !view.autoPlay;
       sorted.forEach((card, index) => {
         const selected = view.selectedIds.has(card.id);
         this.handElement.appendChild(this.createCard(card, {
@@ -220,8 +350,8 @@
         }));
       });
       this.handElement.style.setProperty('--hand-count', String(sorted.length));
-      this.handElement.setAttribute('aria-label', `你的手牌，共${player.hand.length}张`);
-      if (focusedId) {
+      this.handElement.setAttribute('aria-label', `麒麟的手牌，共${player.hand.length}张；可点击或按住滑动选择`);
+      if (focusedId && global.CSS && CSS.escape) {
         const nextFocus = this.handElement.querySelector(`[data-card-id="${CSS.escape(focusedId)}"]`);
         if (nextFocus && !nextFocus.disabled) nextFocus.focus({ preventScroll: true });
       }
@@ -229,8 +359,9 @@
 
     renderControls(state, view) {
       const bidding = byId('bidding-actions');
+      const multipliers = byId('multiplier-actions');
       const playing = byId('playing-actions');
-      const humanBidTurn = state.phase === 'bidding' && state.currentPlayer === 0;
+      const humanBidTurn = state.phase === 'bidding' && state.currentPlayer === 0 && !view.autoPlay;
       if (bidding) {
         bidding.hidden = state.phase !== 'bidding';
         bidding.querySelectorAll('[data-bid]').forEach((button) => {
@@ -238,28 +369,32 @@
           button.disabled = !humanBidTurn || (score > 0 && score <= state.highestBid);
         });
       }
+      if (multipliers) {
+        multipliers.hidden = state.phase !== 'doubling';
+        multipliers.querySelectorAll('[data-multiplier]').forEach((button) => {
+          button.disabled = state.phase !== 'doubling' || state.players[0].multiplier !== null || view.autoPlay;
+        });
+      }
       if (playing) playing.hidden = state.phase !== 'playing';
-      const humanPlayTurn = state.phase === 'playing' && state.currentPlayer === 0;
+      const humanPlayTurn = state.phase === 'playing' && state.currentPlayer === 0 && !view.autoPlay;
       const submit = byId('submit-play');
       const pass = byId('pass-play');
       const hint = byId('hint-play');
-      const sort = byId('sort-hand');
       if (submit) submit.disabled = !humanPlayTurn || view.selectedIds.size === 0;
       if (pass) pass.disabled = !humanPlayTurn || !state.lastPlay;
       if (hint) hint.disabled = !humanPlayTurn;
-      if (sort) {
-        sort.disabled = state.phase !== 'playing';
-        sort.setAttribute('aria-label', view.sortMode === 'rank' ? '当前按牌力排序，点击改为按花色排序' : '当前按花色排序，点击改为按牌力排序');
-        const label = sort.querySelector('[data-label]');
-        setText(label || sort, view.sortMode === 'rank' ? '按花色' : '按牌力');
-      }
     }
 
     renderSelection(state, view) {
       const element = byId('selection-status');
       if (!element) return;
       if (!view.selectedIds.size) {
-        setText(element, state.phase === 'playing' && state.currentPlayer === 0 ? '点击手牌进行选择' : '等待你的回合');
+        const message = view.autoPlay
+          ? '电脑托管中，麒麟将由电脑自动操作'
+          : (state.phase === 'playing' && state.currentPlayer === 0
+          ? '按住手牌并滑动即可连续选择'
+          : (state.phase === 'doubling' ? '请选择本局倍率' : (state.phase === 'landlordReveal' ? '倍率已确定，准备开局' : '等待你的回合')));
+        setText(element, message);
         element.classList.remove('is-valid', 'is-invalid');
         return;
       }
@@ -276,6 +411,40 @@
       }
     }
 
+    renderPhaseOverlay(state, view) {
+      const overlay = byId('phase-overlay');
+      const title = byId('phase-overlay-title');
+      const number = byId('phase-overlay-number');
+      if (!overlay) return;
+      if (state.phase === 'bidding') {
+        overlay.hidden = false;
+        overlay.dataset.tone = 'bidding';
+        setText(title, `${state.players[state.currentPlayer].name}叫分倒计时`);
+        setText(number, `${view.bidSeconds || 10}`);
+      } else if (state.phase === 'doubling') {
+        overlay.hidden = false;
+        overlay.dataset.tone = 'multiplier';
+        setText(title, '选择本局倍率');
+        setText(number, `${view.multiplierSeconds || 5}`);
+      } else if (state.phase === 'landlordReveal') {
+        overlay.hidden = false;
+        overlay.dataset.tone = 'landlord';
+        setText(title, `${state.players[state.landlordIndex].name}成为地主`);
+        setText(number, `${view.revealCountdown || 3}`);
+      } else if (state.phase === 'finished') {
+        overlay.hidden = false;
+        const winnerText = state.result && state.result.winnerRole === 'landlord' ? '地主胜利' : '农民胜利';
+        overlay.dataset.tone = state.result && state.result.humanWon ? 'win' : 'lose';
+        setText(title, `${winnerText}！`);
+        setText(number, Number.isFinite(view.settlementCountdown) ? `${view.settlementCountdown}` : '结算完成');
+      } else {
+        overlay.hidden = true;
+        overlay.dataset.tone = '';
+        setText(title, '');
+        setText(number, '');
+      }
+    }
+
     renderResult(state) {
       if (state.phase !== 'finished' || !state.result) return;
       const modal = byId('modal-result');
@@ -283,9 +452,29 @@
       const title = modal.querySelector('[data-result="title"]');
       const summary = modal.querySelector('[data-result="summary"]');
       const detail = modal.querySelector('[data-result="detail"]');
-      setText(title, state.result.humanWon ? '漂亮，赢下这一局！' : '这局惜败');
-      setText(summary, `${state.result.winnerRole === 'landlord' ? '地主' : '农民'}阵营获胜`);
-      setText(detail, `你的身份：${roleName(state.players[0].role)} · 叫分：${state.result.bid}分 · 炸弹/王炸：${state.result.bombCount}次`);
+      const settlement = state.settlement || state.result.settlement;
+      const winnerSide = state.result.winnerRole === 'landlord' ? '地主' : '农民';
+      const loserSide = state.result.winnerRole === 'landlord' ? '农民' : '地主';
+      setText(title, `${winnerSide}胜利！`);
+      setText(summary, `${loserSide}失败`);
+      if (settlement) {
+        const delta = settlement.deltas[0];
+        const spring = settlement.springType === 'landlord-spring' ? ' · 春天×2' : (settlement.springType === 'farmer-spring' ? ' · 反春×2' : '');
+        const humanMultiplier = settlement.playerMultipliers ? settlement.playerMultipliers[0] : 1;
+        setText(detail, `麒麟币 ${delta >= 0 ? '+' : ''}${formatCoins(delta)} · 底注 100 · 叫分×${settlement.multipliers.bid} · 麒麟×${humanMultiplier} · 炸弹×${settlement.multipliers.bombs}${spring} · 余额 ${formatCoins(settlement.balances[0])}`);
+      } else {
+        setText(detail, `身份：${roleName(state.players[0].role)} · 叫分：${state.result.bid}分 · 炸弹/王炸：${state.result.bombCount}次`);
+      }
+      const emblem = byId('result-emblem');
+      setText(emblem, state.result.humanWon ? '胜' : '败');
+      modal.classList.toggle('is-win', state.result.humanWon);
+      modal.classList.toggle('is-lose', !state.result.humanWon);
+      const restart = byId('result-restart');
+      if (restart) {
+        const blocked = state.players.some((player) => player.coins <= 0);
+        restart.disabled = blocked;
+        restart.textContent = blocked ? '麒麟币已用完' : '再来一局';
+      }
     }
 
     showToast(message, tone) {
@@ -320,9 +509,7 @@
       if (typeof modal.close === 'function') {
         if (modal.open) modal.close();
         modal.removeAttribute('hidden');
-      } else {
-        modal.hidden = true;
-      }
+      } else modal.hidden = true;
       modal.classList.remove('is-open');
       modal.setAttribute('aria-hidden', 'true');
     }

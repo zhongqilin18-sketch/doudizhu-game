@@ -19,6 +19,7 @@ const MIME_TYPES = {
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".mjs": "text/javascript; charset=utf-8",
+  ".mp3": "audio/mpeg",
   ".png": "image/png",
   ".svg": "image/svg+xml; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
@@ -63,9 +64,12 @@ fs.mkdirSync(serverRoot, { recursive: true });
 
 fs.copyFileSync(path.join(projectRoot, "index.html"), path.join(clientRoot, "index.html"));
 copyDirectory(path.join(projectRoot, "src"), path.join(clientRoot, "src"));
+const publicAssets = ["麒麟.jpg", "掘开.jpg", "旭旭宝宝.jpg", "发牌.mp3", "出牌.mp3", "点牌.mp3", "背景音乐.mp3"];
+publicAssets.forEach((asset) => fs.copyFileSync(path.join(projectRoot, asset), path.join(clientRoot, asset)));
 
 const relativeAssets = [
   "index.html",
+  ...publicAssets,
   ...listFiles(path.join(projectRoot, "src")).map((filePath) => path.relative(projectRoot, filePath)),
 ];
 const assets = relativeAssets.map(buildAssetRecord);
@@ -96,7 +100,9 @@ const worker = {
     }
 
     const url = new URL(request.url);
-    const asset = ASSETS.get(url.pathname);
+    let requestPath = url.pathname;
+    try { requestPath = decodeURIComponent(requestPath); } catch (error) { /* keep original path */ }
+    const asset = ASSETS.get(requestPath);
     if (!asset) {
       return new Response("Not Found", {
         status: 404,
@@ -108,7 +114,7 @@ const worker = {
       return new Response(null, { status: 304, headers: { ETag: asset.etag } });
     }
 
-    const isDocument = url.pathname === "/" || url.pathname.endsWith(".html");
+    const isDocument = requestPath === "/" || requestPath.endsWith(".html");
     const headers = new Headers({
       "Cache-Control": isDocument ? "no-cache" : "public, max-age=86400",
       "Content-Type": asset.mimeType,

@@ -1014,6 +1014,369 @@ input[type="range"] {
   }
 }
 
+/* Unified blue-and-gold dialog language for every menu, rule, reset and result surface. */
+.game-dialog {
+  color: #ecf8ff;
+  border-radius: 28px;
+  box-shadow:
+    0 30px 90px rgba(0, 4, 25, 0.72),
+    0 0 0 1px rgba(122, 209, 247, 0.12);
+}
+
+.game-dialog::backdrop {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(26, 126, 199, 0.23), transparent 42%),
+    rgba(1, 10, 30, 0.84);
+  backdrop-filter: blur(10px) saturate(1.08);
+}
+
+.game-dialog[open] {
+  animation: dialog-blue-in 280ms var(--ease-out) both;
+}
+
+.game-dialog .dialog-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #e9f7ff;
+  background:
+    radial-gradient(circle at 88% 4%, rgba(99, 203, 247, 0.24), transparent 27%),
+    radial-gradient(circle at 9% 108%, rgba(33, 125, 211, 0.28), transparent 35%),
+    linear-gradient(142deg, #0b528d 0%, #073864 43%, #041d43 100%);
+  border: 1px solid rgba(255, 209, 103, 0.64);
+  border-radius: 28px;
+  box-shadow:
+    inset 0 1px rgba(239, 250, 255, 0.2),
+    inset 0 -36px 72px rgba(0, 13, 45, 0.35),
+    0 0 0 5px rgba(99, 199, 242, 0.055);
+}
+
+.game-dialog .dialog-shell::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  content: "";
+  background:
+    repeating-linear-gradient(45deg, transparent 0 14px, rgba(218, 246, 255, 0.026) 14px 15px),
+    repeating-linear-gradient(-45deg, transparent 0 14px, rgba(255, 213, 106, 0.02) 14px 15px);
+  opacity: 0.94;
+  pointer-events: none;
+}
+
+.game-dialog .dialog-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.game-dialog .dialog-header {
+  background: linear-gradient(90deg, rgba(2, 26, 62, 0.32), rgba(64, 162, 218, 0.09), rgba(2, 26, 62, 0.32));
+  border-bottom-color: rgba(158, 219, 246, 0.22);
+  box-shadow: inset 0 -1px rgba(255, 215, 113, 0.1);
+}
+
+.game-dialog .dialog-header h2,
+.game-dialog .dialog-shell-small h2 {
+  color: #f6fbff;
+  letter-spacing: 0.035em;
+  text-shadow: 0 2px 0 rgba(1, 20, 53, 0.68), 0 0 20px rgba(97, 202, 247, 0.2);
+}
+
+.game-dialog .dialog-eyebrow {
+  color: #ffd879;
+  letter-spacing: 0.12em;
+  text-shadow: 0 1px rgba(42, 26, 0, 0.64);
+}
+
+.game-dialog .dialog-close {
+  color: #ffe3a2;
+  background: linear-gradient(145deg, rgba(71, 169, 216, 0.28), rgba(3, 31, 74, 0.74));
+  border-color: rgba(164, 222, 245, 0.35);
+  box-shadow: inset 0 1px rgba(242, 251, 255, 0.12);
+}
+
+.game-dialog .dialog-close:hover {
+  color: #fff7dc;
+  background: linear-gradient(145deg, rgba(255, 208, 93, 0.3), rgba(16, 86, 142, 0.78));
+  border-color: rgba(255, 220, 126, 0.72);
+}
+
+.game-dialog .dialog-body {
+  background: linear-gradient(180deg, rgba(6, 50, 99, 0.22), rgba(2, 20, 55, 0.18));
+  scrollbar-color: rgba(255, 209, 103, 0.72) rgba(2, 27, 64, 0.48);
+}
+
+.game-dialog .dialog-footer {
+  background: linear-gradient(180deg, rgba(3, 25, 61, 0.08), rgba(1, 18, 48, 0.28));
+  border-top-color: rgba(158, 219, 246, 0.2);
+}
+
+.rules-dialog .rules-content {
+  color: #cfe8f6;
+}
+
+.rules-dialog .rules-content section {
+  padding: 14px 15px;
+  background: linear-gradient(135deg, rgba(88, 187, 231, 0.085), rgba(3, 34, 79, 0.24));
+  border: 1px solid rgba(145, 215, 244, 0.13);
+  border-radius: 15px;
+  box-shadow: inset 0 1px rgba(239, 250, 255, 0.045);
+}
+
+.rules-dialog .rules-content section + section {
+  padding-top: 14px;
+  margin-top: 11px;
+  border-top-color: rgba(145, 215, 244, 0.13);
+}
+
+.rules-dialog .rules-content h3 {
+  color: #ffdc81;
+  letter-spacing: 0.045em;
+}
+
+.rules-dialog .rule-tags span {
+  color: #e5f6ff;
+  background: linear-gradient(145deg, rgba(58, 158, 210, 0.3), rgba(3, 38, 82, 0.58));
+  border-color: rgba(154, 219, 247, 0.28);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.07);
+}
+
+.settings-dialog .dialog-shell,
+.confirm-dialog .dialog-shell,
+.result-dialog .dialog-shell {
+  background:
+    radial-gradient(circle at 50% -8%, rgba(127, 215, 250, 0.25), transparent 31%),
+    radial-gradient(circle at 100% 100%, rgba(255, 202, 81, 0.11), transparent 31%),
+    linear-gradient(145deg, #0a548f, #063462 51%, #041d43);
+}
+
+.settings-dialog .setting-row {
+  padding: 14px 14px;
+  border-bottom-color: rgba(155, 220, 246, 0.17);
+  border-radius: 13px;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.settings-dialog .setting-row:hover {
+  background: linear-gradient(100deg, rgba(83, 188, 232, 0.13), rgba(255, 206, 88, 0.075));
+}
+
+.settings-dialog .setting-row strong,
+.settings-dialog .volume-setting strong {
+  color: #f4fbff;
+}
+
+.settings-dialog .setting-row small,
+.settings-dialog .volume-setting small {
+  color: #acd3e9;
+}
+
+.settings-dialog .volume-setting {
+  background: linear-gradient(135deg, rgba(12, 79, 139, 0.38), rgba(2, 28, 70, 0.5));
+  border-color: rgba(153, 219, 245, 0.2);
+  box-shadow: inset 0 1px rgba(241, 250, 255, 0.05);
+}
+
+.settings-dialog .volume-setting output {
+  color: #ffdc83;
+  text-shadow: 0 1px rgba(29, 20, 0, 0.54);
+}
+
+.settings-dialog .switch-track {
+  background: #0a3b70;
+  border: 1px solid rgba(147, 214, 243, 0.26);
+}
+
+.settings-dialog .switch-input:checked + .switch-track {
+  background: linear-gradient(90deg, #bd8421, #f2c257);
+  border-color: #ffe29a;
+}
+
+.settings-dialog input[type="range"] {
+  accent-color: #ffd166;
+}
+
+.settings-dialog input[type="range"]::-webkit-slider-runnable-track {
+  height: 7px;
+  background: linear-gradient(90deg, #e9af3d, #248cce 68%, #0a3b70);
+  border: 1px solid rgba(179, 225, 245, 0.23);
+  border-radius: 999px;
+}
+
+.settings-dialog input[type="range"]::-webkit-slider-thumb {
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  background: #fff3c2;
+  border: 2px solid #d79a27;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 10, 38, 0.52);
+  -webkit-appearance: none;
+}
+
+.settings-dialog input[type="range"]::-moz-range-track {
+  height: 7px;
+  background: linear-gradient(90deg, #e9af3d, #248cce 68%, #0a3b70);
+  border: 1px solid rgba(179, 225, 245, 0.23);
+  border-radius: 999px;
+}
+
+.settings-dialog input[type="range"]::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background: #fff3c2;
+  border: 2px solid #d79a27;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 10, 38, 0.52);
+}
+
+.confirm-dialog .dialog-shell-small,
+.result-dialog .dialog-shell-small {
+  border-color: rgba(255, 214, 112, 0.72);
+}
+
+.confirm-dialog .confirm-icon {
+  color: #16345c;
+  background: radial-gradient(circle at 34% 28%, #fff8d3, #f0c257 54%, #bd7a18 100%);
+  border-color: #fff1b7;
+  box-shadow: 0 0 0 5px rgba(71, 172, 220, 0.14), 0 10px 30px rgba(0, 9, 34, 0.35);
+}
+
+.confirm-dialog .dialog-shell-small > p:not(.dialog-eyebrow),
+.result-dialog .dialog-shell-small > p:not(.dialog-eyebrow) {
+  color: #cbe7f6;
+}
+
+.confirm-dialog .button-ghost,
+.result-dialog .button-ghost {
+  color: #dff4ff;
+  background: linear-gradient(145deg, rgba(41, 139, 195, 0.24), rgba(3, 33, 77, 0.72));
+  border-color: rgba(147, 217, 245, 0.3);
+}
+
+.confirm-dialog .button-danger {
+  color: #352300;
+  background: linear-gradient(180deg, #ffe8a2, #e9ae3a);
+  border-color: #fff6cf;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.55), 0 7px 20px rgba(0, 9, 35, 0.28);
+}
+
+.confirm-dialog .button-danger:hover:not(:disabled) {
+  background: linear-gradient(180deg, #fff1bf, #f1bf50);
+}
+
+.result-shell {
+  box-shadow: inset 0 1px rgba(244, 252, 255, 0.18), inset 0 -42px 78px rgba(0, 12, 45, 0.38), 0 22px 64px rgba(0, 4, 26, 0.58);
+}
+
+.result-shell::before {
+  top: -106px;
+  width: 330px;
+  height: 230px;
+  background:
+    radial-gradient(circle, rgba(255, 218, 120, 0.26), transparent 48%),
+    radial-gradient(circle at 50% 70%, rgba(89, 201, 242, 0.24), transparent 68%);
+}
+
+.result-dialog.is-win .result-shell {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 216, 105, 0.22), transparent 35%),
+    linear-gradient(145deg, #0b609e, #063965 54%, #041e44);
+}
+
+.result-dialog.is-lose .result-shell {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(115, 196, 244, 0.2), transparent 34%),
+    linear-gradient(145deg, #084a82, #052c59 54%, #031a3d);
+}
+
+.result-emblem {
+  color: #15365d;
+  background: radial-gradient(circle at 34% 28%, #fff8d9, #f5ce69 50%, #bf801c 100%);
+  border-color: #fff3c8;
+  box-shadow: 0 0 0 6px rgba(73, 183, 229, 0.13), 0 10px 32px rgba(0, 8, 33, 0.42), 0 0 28px rgba(255, 206, 85, 0.35);
+}
+
+.result-dialog.is-lose .result-emblem {
+  color: #e9f8ff;
+  background: radial-gradient(circle at 34% 28%, #5bb6e5, #1e6ba7 55%, #09375f 100%);
+  border-color: #c2ecff;
+  box-shadow: 0 0 0 6px rgba(255, 206, 85, 0.1), 0 10px 32px rgba(0, 8, 33, 0.42), 0 0 28px rgba(92, 200, 243, 0.28);
+}
+
+.result-summary div,
+.result-detail {
+  background: linear-gradient(135deg, rgba(58, 161, 211, 0.18), rgba(3, 32, 76, 0.46));
+  border-color: rgba(151, 218, 245, 0.22);
+}
+
+.result-summary dt { color: #a9d2e7; }
+.result-summary dd,
+.result-detail { color: #ffe095 !important; }
+
+.toast {
+  color: #eefaff;
+  background:
+    linear-gradient(95deg, rgba(6, 48, 96, 0.98), rgba(8, 89, 145, 0.98) 55%, rgba(7, 45, 91, 0.98));
+  border-color: rgba(255, 211, 104, 0.72);
+  box-shadow: 0 12px 34px rgba(0, 6, 31, 0.55), inset 0 1px rgba(239, 251, 255, 0.16);
+  text-shadow: 0 1px rgba(0, 19, 54, 0.6);
+}
+
+.toast::before {
+  display: inline-grid;
+  width: 19px;
+  height: 19px;
+  place-items: center;
+  margin-right: 7px;
+  content: "◆";
+  color: #26486b;
+  background: #ffd46a;
+  border-radius: 50%;
+  font-size: 0.58rem;
+  vertical-align: -1px;
+}
+
+.toast.is-error,
+.toast[data-tone="error"],
+.toast.is-success,
+.toast[data-tone="success"] {
+  color: #eefaff;
+  background:
+    linear-gradient(95deg, rgba(5, 42, 87, 0.98), rgba(13, 103, 158, 0.98) 55%, rgba(5, 37, 78, 0.98));
+  border-color: rgba(255, 211, 104, 0.72);
+}
+
+.toast[data-tone="error"]::before,
+.toast.is-error::before { content: "!"; }
+.toast[data-tone="success"]::before,
+.toast.is-success::before { content: "✓"; }
+
+.bankrupt-message,
+.noscript-message {
+  color: #ffe8a2;
+  background: linear-gradient(135deg, rgba(6, 48, 96, 0.92), rgba(3, 28, 69, 0.96));
+  border-color: rgba(255, 210, 102, 0.54);
+}
+
+@keyframes dialog-blue-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); filter: saturate(0.82); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: saturate(1); }
+}
+
+@media (max-width: 560px) {
+  .game-dialog {
+    width: min(calc(100% - 18px), 650px);
+    max-height: min(91vh, 760px);
+    max-height: min(91dvh, 760px);
+    border-radius: 21px;
+  }
+
+  .game-dialog .dialog-shell { border-radius: 21px; }
+  .rules-dialog .rules-content section { padding: 12px; border-radius: 12px; }
+  .settings-dialog .setting-row { padding: 12px 10px; }
+  .toast { max-width: calc(100% - 20px); padding: 10px 13px; font-size: 0.78rem; }
+}
+
 @media (max-height: 690px) and (min-width: 561px) {
   .menu-screen {
     align-items: start;
@@ -1132,4 +1495,361 @@ input[type="range"] {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* 麒麟斗地主：本地虚拟货币与菜单状态 */
+.menu-wallet {
+  display: flex;
+  width: min(100%, 430px);
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin: 16px auto 4px;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, rgba(242, 198, 109, 0.13), rgba(4, 50, 38, 0.62));
+  border: 1px solid rgba(242, 198, 109, 0.32);
+  border-radius: 16px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.menu-wallet > span:nth-child(2) {
+  display: grid;
+  flex: 1;
+  text-align: left;
+}
+
+.menu-wallet small {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+}
+
+.menu-wallet strong {
+  color: var(--gold-300);
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.menu-wallet em {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-style: normal;
+}
+
+.kirin-coin {
+  display: inline-grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  color: #4b3000;
+  background: radial-gradient(circle at 35% 30%, #fff3ae, #efbd42 48%, #a96d08 100%);
+  border: 1px solid #ffe49a;
+  border-radius: 50%;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.28), inset 0 0 0 2px rgba(112, 63, 0, 0.16);
+  font-size: 0.58rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.kirin-coin.large {
+  width: 38px;
+  height: 38px;
+  font-size: 1rem;
+}
+
+.bankrupt-message {
+  padding: 8px 12px;
+  margin: 6px 0 0;
+  color: #ffe0dc;
+  background: rgba(157, 46, 38, 0.24);
+  border: 1px solid rgba(255, 135, 126, 0.34);
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.quick-settings {
+  flex-wrap: wrap;
+}
+
+.reset-coins-button {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.volume-setting small {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  line-height: 1.45;
+}
+
+/* Blue-and-gold foyer: keep the menu visually continuous with the game table. */
+body {
+  background:
+    radial-gradient(ellipse at 50% -12%, rgba(50, 163, 230, 0.42), transparent 44%),
+    radial-gradient(circle at 8% 92%, rgba(11, 87, 164, 0.46), transparent 34%),
+    linear-gradient(145deg, #041426 0%, #082c52 52%, #031426 100%);
+}
+
+.ambient {
+  opacity: 0.34;
+  filter: blur(92px);
+}
+
+.ambient-one {
+  background: #63c8f1;
+}
+
+.ambient-two {
+  background: #0c62ba;
+}
+
+.menu-screen {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(90deg, rgba(3, 19, 42, 0.34), transparent 18% 82%, rgba(3, 19, 42, 0.34)),
+    repeating-linear-gradient(-45deg, rgba(194, 231, 255, 0.025) 0 1px, transparent 1px 15px);
+}
+
+.menu-screen::before,
+.menu-screen::after {
+  position: fixed;
+  z-index: -1;
+  color: rgba(123, 211, 255, 0.07);
+  font-family: Georgia, serif;
+  font-size: clamp(14rem, 31vw, 30rem);
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.menu-screen::before {
+  top: -0.3em;
+  left: -0.12em;
+  content: "♠";
+  transform: rotate(-14deg);
+}
+
+.menu-screen::after {
+  right: -0.08em;
+  bottom: -0.43em;
+  content: "♦";
+  color: rgba(242, 193, 80, 0.065);
+  transform: rotate(18deg);
+}
+
+.menu-card {
+  width: min(100%, 610px);
+  background:
+    radial-gradient(circle at 50% -16%, rgba(109, 205, 255, 0.24), transparent 42%),
+    linear-gradient(145deg, rgba(8, 54, 100, 0.97), rgba(4, 25, 57, 0.985) 72%, rgba(2, 16, 37, 0.99));
+  border: 2px solid rgba(242, 193, 80, 0.54);
+  box-shadow:
+    0 26px 80px rgba(0, 7, 27, 0.56),
+    0 0 0 7px rgba(97, 196, 239, 0.055),
+    inset 0 1px rgba(232, 248, 255, 0.18),
+    inset 0 -32px 62px rgba(0, 8, 34, 0.32);
+}
+
+.menu-card::before {
+  background:
+    radial-gradient(circle at 50% 6%, rgba(255, 255, 255, 0.13), transparent 25%),
+    repeating-linear-gradient(45deg, transparent 0 15px, rgba(176, 226, 255, 0.024) 15px 16px),
+    repeating-linear-gradient(-45deg, transparent 0 15px, rgba(242, 193, 80, 0.018) 15px 16px);
+}
+
+.brand-cards {
+  height: 66px;
+  margin-bottom: 17px;
+}
+
+.brand-card {
+  width: 46px;
+  height: 62px;
+  border-color: rgba(8, 47, 86, 0.35);
+  box-shadow: 0 9px 21px rgba(0, 7, 28, 0.42), inset 0 1px #fff;
+}
+
+.brand-block h1 {
+  color: #f5fbff;
+  text-shadow: 0 3px 0 rgba(7, 40, 77, 0.82), 0 0 28px rgba(80, 191, 246, 0.31);
+}
+
+.menu-intro {
+  color: #c5dded;
+}
+
+.eyebrow,
+.dialog-eyebrow {
+  color: #ffd878;
+  text-shadow: 0 1px rgba(49, 26, 0, 0.5);
+}
+
+.menu-wallet {
+  margin-top: 19px;
+  background: linear-gradient(135deg, rgba(242, 193, 80, 0.19), rgba(20, 125, 189, 0.24) 48%, rgba(2, 31, 71, 0.62));
+  border-color: rgba(255, 213, 107, 0.52);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12), 0 9px 24px rgba(0, 9, 35, 0.22);
+}
+
+.difficulty-fieldset legend {
+  color: #d6ecf8;
+}
+
+.difficulty-option {
+  background: linear-gradient(150deg, rgba(111, 203, 247, 0.11), rgba(4, 28, 62, 0.45));
+  border-color: rgba(150, 216, 244, 0.2);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.045);
+}
+
+.difficulty-option:hover {
+  background: linear-gradient(150deg, rgba(111, 203, 247, 0.21), rgba(4, 35, 77, 0.65));
+  border-color: rgba(255, 214, 111, 0.52);
+}
+
+.difficulty-option:has(input:checked) {
+  background: linear-gradient(150deg, rgba(242, 193, 80, 0.27), rgba(29, 137, 198, 0.22));
+  border-color: #ffd365;
+  box-shadow: 0 8px 18px rgba(0, 8, 31, 0.2), inset 0 1px rgba(255, 250, 211, 0.17);
+}
+
+.difficulty-copy small,
+.privacy-note {
+  color: #91b5cc;
+}
+
+.switch-control,
+.icon-text-button {
+  background: rgba(4, 31, 69, 0.62);
+  border-color: rgba(140, 210, 242, 0.19);
+  box-shadow: inset 0 1px rgba(225, 246, 255, 0.05);
+}
+
+.switch-control:hover,
+.icon-text-button:hover {
+  background: rgba(10, 67, 120, 0.66);
+  border-color: rgba(255, 214, 111, 0.5);
+}
+
+.switch-track {
+  background: #1d4d78;
+}
+
+.switch-input:checked + .switch-track {
+  background: #d99d2e;
+}
+
+.button-secondary {
+  background: linear-gradient(145deg, rgba(51, 149, 205, 0.32), rgba(5, 39, 83, 0.82));
+  border-color: rgba(158, 221, 246, 0.27);
+}
+
+.button-ghost {
+  background: rgba(3, 25, 59, 0.6);
+}
+
+.game-dialog::backdrop {
+  background: rgba(1, 13, 33, 0.8);
+}
+
+.settings-dialog .dialog-shell {
+  background:
+    radial-gradient(circle at 88% 0%, rgba(94, 197, 247, 0.2), transparent 33%),
+    linear-gradient(155deg, #0a4a82, #062c5b 48%, #041b3c);
+  border-color: rgba(242, 193, 80, 0.5);
+  box-shadow: inset 0 1px rgba(237, 249, 255, 0.14), 0 25px 70px rgba(0, 8, 29, 0.55);
+}
+
+.settings-dialog .dialog-header,
+.settings-dialog .dialog-footer {
+  border-color: rgba(171, 223, 247, 0.18);
+}
+
+.settings-dialog .dialog-body {
+  background: linear-gradient(180deg, rgba(4, 38, 79, 0.16), rgba(2, 20, 48, 0.24));
+}
+
+.settings-dialog .setting-row {
+  padding: 14px 12px;
+  border-bottom-color: rgba(167, 220, 246, 0.16);
+}
+
+.settings-dialog .setting-row:hover {
+  background: rgba(90, 183, 232, 0.09);
+  border-radius: 12px;
+}
+
+.settings-dialog .volume-setting {
+  padding: 18px 12px 8px;
+  background: rgba(4, 36, 76, 0.34);
+  border: 1px solid rgba(154, 219, 246, 0.14);
+  border-radius: 13px;
+}
+
+.settings-dialog input[type="range"] {
+  accent-color: #f4bd49;
+}
+
+@media (max-width: 560px) {
+  .menu-card {
+    border-width: 1px;
+    box-shadow: 0 16px 48px rgba(0, 7, 27, 0.52), inset 0 1px rgba(232, 248, 255, 0.14);
+  }
+
+  .menu-screen::before,
+  .menu-screen::after {
+    font-size: 12rem;
+  }
+}
+
+/* Keep the settings sheet on the same final blue-and-gold cascade as the other dialogs. */
+.game-dialog::backdrop {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(26, 126, 199, 0.23), transparent 42%),
+    rgba(1, 10, 30, 0.84);
+  backdrop-filter: blur(10px) saturate(1.08);
+}
+
+.settings-dialog .dialog-shell {
+  background:
+    radial-gradient(circle at 50% -8%, rgba(127, 215, 250, 0.25), transparent 31%),
+    radial-gradient(circle at 100% 100%, rgba(255, 202, 81, 0.11), transparent 31%),
+    linear-gradient(145deg, #0a548f, #063462 51%, #041d43);
+  border-color: rgba(255, 209, 103, 0.64);
+}
+
+.settings-dialog .dialog-header,
+.settings-dialog .dialog-footer {
+  border-color: rgba(158, 219, 246, 0.22);
+}
+
+.settings-dialog .dialog-body {
+  background: linear-gradient(180deg, rgba(6, 50, 99, 0.22), rgba(2, 20, 55, 0.18));
+}
+
+.settings-dialog .setting-row {
+  padding: 14px;
+  border-bottom-color: rgba(155, 220, 246, 0.17);
+}
+
+.settings-dialog .setting-row:hover {
+  background: linear-gradient(100deg, rgba(83, 188, 232, 0.13), rgba(255, 206, 88, 0.075));
+  border-radius: 13px;
+}
+
+.settings-dialog .volume-setting {
+  background: linear-gradient(135deg, rgba(12, 79, 139, 0.38), rgba(2, 28, 70, 0.5));
+  border-color: rgba(153, 219, 245, 0.2);
+}
+
+.settings-dialog .switch-track {
+  background: #0a3b70;
+  border: 1px solid rgba(147, 214, 243, 0.26);
+}
+
+.settings-dialog .switch-input:checked + .switch-track {
+  background: linear-gradient(90deg, #bd8421, #f2c257);
+  border-color: #ffe29a;
 }

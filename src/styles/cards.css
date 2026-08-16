@@ -509,3 +509,112 @@ button.playing-card:disabled,
     animation: none;
   }
 }
+
+/* 手牌间距更舒展；抬起的牌为相邻牌留出完整轮廓。 */
+.human-hand {
+  --card-overlap: clamp(-31px, -2vw, -15px);
+  touch-action: pan-y;
+}
+
+.human-hand.is-compact .playing-card + .playing-card,
+.human-hand.is-ultra-compact .playing-card + .playing-card {
+  margin-left: var(--card-overlap);
+}
+
+.human-hand .playing-card.is-selected,
+.human-hand .playing-card[aria-pressed="true"] {
+  margin-left: 0 !important;
+  margin-right: 4px;
+  transform: translateY(-24px);
+}
+
+.human-hand .playing-card.is-selected + .playing-card,
+.human-hand .playing-card[aria-pressed="true"] + .playing-card {
+  margin-left: 0 !important;
+}
+
+.human-hand.is-drag-selecting {
+  cursor: grabbing;
+  touch-action: none;
+  user-select: none;
+}
+
+.playing-card.is-micro {
+  --card-width: 31px;
+  --card-height: 44px;
+  flex: 0 0 var(--card-width);
+  border-radius: 5px;
+}
+
+.playing-card.is-micro .card-suit-center,
+.playing-card.is-micro .card-corner-bottom,
+.playing-card.is-micro .joker-star {
+  display: none;
+}
+
+.playing-card.is-micro .card-corner-top {
+  top: 3px;
+  left: 3px;
+  font-size: 0.55rem;
+}
+
+.personal-card-row .playing-card + .playing-card {
+  margin-left: clamp(-24px, -1.6vw, -10px);
+}
+
+.personal-card-row .playing-card.is-micro + .playing-card.is-micro {
+  margin-left: -19px;
+}
+
+@media (max-width: 600px) {
+  .human-hand {
+    --card-overlap: clamp(-32px, -7vw, -23px);
+  }
+
+  .human-hand .playing-card.is-selected,
+  .human-hand .playing-card[aria-pressed="true"] {
+    margin-right: 0;
+    transform: translateY(-24px) scale(0.86);
+  }
+
+  .human-hand .playing-card.is-selected + .playing-card,
+  .human-hand .playing-card[aria-pressed="true"] + .playing-card {
+    margin-left: var(--card-overlap) !important;
+  }
+
+  .human-hand .playing-card.is-selected:not(:first-child),
+  .human-hand .playing-card[aria-pressed="true"]:not(:first-child) {
+    margin-left: var(--card-overlap) !important;
+  }
+
+  .human-hand.is-compact .playing-card + .playing-card {
+    margin-left: clamp(-35px, -8vw, -27px) !important;
+  }
+
+  .human-hand.is-ultra-compact .playing-card + .playing-card {
+    margin-left: clamp(-37px, -8.5vw, -29px) !important;
+  }
+
+  .human-hand.is-compact .playing-card.is-selected:not(:first-child),
+  .human-hand.is-compact .playing-card[aria-pressed="true"]:not(:first-child),
+  .human-hand.is-compact .playing-card.is-selected + .playing-card,
+  .human-hand.is-compact .playing-card[aria-pressed="true"] + .playing-card {
+    margin-left: clamp(-35px, -8vw, -27px) !important;
+  }
+
+  .human-hand.is-ultra-compact .playing-card.is-selected:not(:first-child),
+  .human-hand.is-ultra-compact .playing-card[aria-pressed="true"]:not(:first-child),
+  .human-hand.is-ultra-compact .playing-card.is-selected + .playing-card,
+  .human-hand.is-ultra-compact .playing-card[aria-pressed="true"] + .playing-card {
+    margin-left: clamp(-37px, -8.5vw, -29px) !important;
+  }
+
+  .playing-card.is-micro {
+    --card-width: 28px;
+    --card-height: 40px;
+  }
+
+  .personal-card-row .playing-card.is-micro + .playing-card.is-micro {
+    margin-left: -21px;
+  }
+}

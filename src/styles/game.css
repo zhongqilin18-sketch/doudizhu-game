@@ -499,6 +499,10 @@
   animation: bubble-in 180ms var(--ease-out) both;
 }
 
+.mobile-action-bubble {
+  display: none;
+}
+
 .opponent-card-fan {
   position: absolute;
   right: -12px;
@@ -1377,4 +1381,1952 @@
   .modal-card.result-pop {
     animation: none;
   }
+}
+
+/* ===== 麒麟斗地主增强界面 ===== */
+.avatar-photo {
+  background: #173a31;
+}
+
+.avatar-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 32%;
+}
+
+.player-coins {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 3px 0 0;
+  color: var(--gold-300);
+  font-size: 0.67rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.player-coins .kirin-coin {
+  width: 15px;
+  height: 15px;
+  font-size: 0.47rem;
+}
+
+.landlord-crown {
+  position: absolute;
+  top: -38px;
+  left: 18px;
+  z-index: 12;
+  color: #ffd964;
+  font-size: 2.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.48)) drop-shadow(0 0 12px rgba(255, 209, 91, 0.75));
+  animation: crown-float 1.25s ease-in-out infinite;
+}
+
+.human-seat .landlord-crown {
+  left: 11px;
+}
+
+.turn-countdown {
+  position: absolute;
+  top: -23px;
+  right: -20px;
+  z-index: 15;
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  color: #fff6d8;
+  background: conic-gradient(var(--gold-400), #bd7b15 68%, rgba(2, 36, 27, 0.92) 69%);
+  border: 3px solid #fff2bf;
+  border-radius: 50%;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.42), 0 0 18px rgba(242, 198, 109, 0.42);
+  font-size: 1.18rem;
+  font-weight: 950;
+  font-variant-numeric: tabular-nums;
+}
+
+.seat-right .turn-countdown {
+  right: auto;
+  left: -20px;
+}
+
+.turn-countdown.is-urgent {
+  color: white;
+  background: #c93f35;
+  border-color: #ffd1cc;
+  animation: urgent-countdown 650ms ease-in-out infinite;
+}
+
+/* 叫分标签按原视觉约四倍放大，远处也能一眼看清。 */
+.bid-bubble {
+  min-width: 148px;
+  padding: 15px 23px;
+  color: #342000;
+  background: linear-gradient(180deg, #fff2b9, #e5ad39);
+  border: 3px solid #fff6d8;
+  font-size: 2.4rem;
+  line-height: 1;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.42), 0 0 24px rgba(255, 206, 93, 0.55);
+}
+
+.human-seat .bid-bubble {
+  top: -92px;
+}
+
+.player-play-zone {
+  position: absolute;
+  z-index: 22;
+  display: grid;
+  min-width: 92px;
+  min-height: 66px;
+  align-content: center;
+  justify-items: center;
+  padding: 5px 8px;
+  color: var(--text-secondary);
+  background: rgba(2, 31, 23, 0.24);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 13px;
+  pointer-events: none;
+}
+
+.play-zone-left {
+  top: clamp(174px, 28vh, 240px);
+  left: max(180px, calc(var(--safe-left) + 18vw));
+  max-width: 31vw;
+}
+
+.play-zone-right {
+  top: clamp(174px, 28vh, 240px);
+  right: max(180px, calc(var(--safe-right) + 18vw));
+  max-width: 31vw;
+}
+
+.play-zone-human {
+  bottom: calc(var(--card-height) + 165px + var(--safe-bottom));
+  left: 50%;
+  max-width: min(70vw, 720px);
+  transform: translateX(-50%);
+}
+
+.player-play-zone.is-empty {
+  opacity: 0.5;
+}
+
+.player-play-zone.is-revealed-hand {
+  z-index: 80;
+  min-width: 170px;
+  opacity: 1;
+  background: rgba(3, 27, 21, 0.88);
+  border: 1px solid rgba(242, 198, 109, 0.42);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.38);
+}
+
+.play-zone-label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--gold-300);
+  font-size: 0.62rem;
+  font-weight: 850;
+  text-align: center;
+}
+
+.personal-card-row {
+  display: flex;
+  max-width: 100%;
+  justify-content: center;
+}
+
+.pass-mark,
+.winner-empty-hand {
+  color: var(--gold-300);
+  font-size: 1.05rem;
+  text-shadow: 0 2px 7px rgba(0, 0, 0, 0.45);
+}
+
+.card-counter {
+  position: absolute;
+  top: 8px;
+  right: max(12px, var(--safe-right));
+  z-index: 70;
+  display: flex;
+  max-width: min(43vw, 640px);
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  color: var(--text-secondary);
+  background: rgba(2, 29, 22, 0.88);
+  border: 1px solid rgba(242, 198, 109, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(7px);
+}
+
+.counter-title {
+  flex: 0 0 auto;
+  color: var(--gold-300);
+  font-size: 0.64rem;
+  white-space: nowrap;
+}
+
+.card-counter-list {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 3px;
+}
+
+.counter-chip {
+  display: grid;
+  min-width: 28px;
+  grid-template-columns: auto auto;
+  gap: 3px;
+  align-items: baseline;
+  justify-content: center;
+  padding: 2px 4px;
+  color: #17231f;
+  background: #f8f2df;
+  border-radius: 5px;
+  font-size: 0.54rem;
+}
+
+.counter-chip b {
+  color: #b42e30;
+  font-size: 0.68rem;
+}
+
+.counter-chip.is-zero {
+  opacity: 0.35;
+}
+
+.phase-overlay {
+  display: grid;
+  min-width: min(72vw, 560px);
+  min-height: 150px;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  padding: 18px;
+  color: #2c1b00;
+  background: radial-gradient(circle, rgba(255, 236, 164, 0.96), rgba(224, 167, 54, 0.94) 52%, rgba(97, 54, 5, 0.2) 72%, transparent 74%);
+  border-radius: 50%;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.35));
+  animation: overlay-pop 420ms var(--ease-out) both;
+}
+
+.phase-overlay strong {
+  font-size: clamp(1.15rem, 3vw, 2.15rem);
+  font-weight: 950;
+  text-align: center;
+  text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.phase-overlay span {
+  display: grid;
+  min-width: 68px;
+  min-height: 68px;
+  place-items: center;
+  color: white;
+  background: rgba(80, 40, 0, 0.8);
+  border: 3px solid rgba(255, 255, 255, 0.78);
+  border-radius: 50%;
+  font-size: clamp(1.5rem, 4vw, 2.8rem);
+  font-weight: 950;
+}
+
+.phase-overlay[data-tone="win"] {
+  color: #063421;
+  background: radial-gradient(circle, rgba(210, 255, 218, 0.98), rgba(84, 211, 133, 0.94) 52%, transparent 74%);
+}
+
+.phase-overlay[data-tone="lose"] {
+  color: #3a1211;
+  background: radial-gradient(circle, rgba(255, 222, 216, 0.98), rgba(226, 104, 91, 0.94) 52%, transparent 74%);
+}
+
+.fx-layer.fx-bomb,
+.fx-layer.fx-rocket,
+.fx-layer.fx-plane {
+  display: grid;
+  place-items: center;
+  color: white;
+  background: radial-gradient(circle at center, rgba(255, 199, 66, 0.28), transparent 52%);
+}
+
+.fx-visual {
+  position: absolute;
+  font-size: clamp(5rem, 15vw, 11rem);
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.48));
+}
+
+.fx-special-word {
+  position: absolute;
+  top: 65%;
+  padding: 8px 20px;
+  color: #2a1700;
+  background: linear-gradient(#fff1ae, #eaa935);
+  border: 3px solid #fff6cf;
+  border-radius: 999px;
+  box-shadow: 0 0 34px rgba(255, 190, 56, 0.72);
+  font-size: clamp(1.2rem, 3.5vw, 2.6rem);
+  font-weight: 950;
+}
+
+.fx-bomb .fx-visual { animation: bomb-throw 1.15s cubic-bezier(.2,.8,.3,1) both; }
+.fx-bomb .fx-special-word { animation: special-word 1.1s ease both; }
+.fx-rocket .fx-visual { animation: rocket-launch 1.45s cubic-bezier(.18,.72,.2,1) both; }
+.fx-rocket .fx-special-word { animation: special-word 1.35s ease both; }
+.fx-plane .fx-visual { animation: plane-takeoff 1.2s ease-in both; }
+.fx-plane .fx-special-word { animation: special-word 1.1s ease both; }
+
+.table-surface.result-win::after,
+.table-surface.result-lose::after {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  content: "";
+  pointer-events: none;
+}
+
+.table-surface.result-win::after {
+  background: radial-gradient(circle at 50% 45%, rgba(255, 225, 93, 0.18), transparent 55%);
+  box-shadow: inset 0 0 90px rgba(255, 216, 76, 0.16);
+}
+
+.table-surface.result-lose::after {
+  background: rgba(38, 10, 9, 0.13);
+  box-shadow: inset 0 0 110px rgba(88, 7, 6, 0.24);
+}
+
+@keyframes crown-float {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-5px) rotate(4deg); }
+}
+
+@keyframes urgent-countdown {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+@keyframes overlay-pop {
+  from { opacity: 0; transform: scale(0.65); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bomb-throw {
+  0% { opacity: 0; transform: translate(-55vw, -38vh) rotate(-320deg) scale(.35); }
+  58% { opacity: 1; transform: translate(0, 0) rotate(20deg) scale(1); }
+  72% { transform: scale(1.45); }
+  100% { opacity: 0; transform: scale(2.8); }
+}
+
+@keyframes rocket-launch {
+  0% { opacity: 0; transform: translateY(55vh) rotate(-8deg) scale(.55); }
+  22% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-70vh) rotate(5deg) scale(1.3); }
+}
+
+@keyframes plane-takeoff {
+  0% { opacity: 0; transform: translate(-60vw, 20vh) rotate(-12deg) scale(.45); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(62vw, -40vh) rotate(-24deg) scale(1.25); }
+}
+
+@keyframes special-word {
+  0%, 100% { opacity: 0; transform: translateY(16px) scale(.75); }
+  25%, 75% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 780px) {
+  .card-counter {
+    top: 72px;
+    right: 50%;
+    max-width: 94vw;
+    transform: translateX(50%);
+  }
+
+  .play-zone-left,
+  .play-zone-right {
+    top: 176px;
+    max-width: 42vw;
+  }
+
+  .play-zone-left { left: 5vw; }
+  .play-zone-right { right: 5vw; }
+
+  .bid-bubble {
+    min-width: 112px;
+    padding: 12px 18px;
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+  .card-counter {
+    top: 80px;
+    gap: 4px;
+    padding: 4px 6px;
+  }
+
+  .counter-title { display: none; }
+  .counter-chip { min-width: 25px; padding: 1px 3px; }
+
+  .table-surface:has(.card-counter:not([hidden])) .bottom-card-zone {
+    top: 205px;
+  }
+
+  .play-zone-left,
+  .play-zone-right {
+    top: 178px;
+    min-width: 74px;
+    min-height: 54px;
+  }
+
+  .play-zone-left { left: 3vw; }
+  .play-zone-right { right: 3vw; }
+
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-left,
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-right {
+    top: 285px;
+  }
+
+  .play-zone-human {
+    bottom: calc(var(--card-height) + 170px + var(--safe-bottom));
+    max-width: 90vw;
+  }
+
+  .player-play-zone.is-revealed-hand {
+    max-width: 46vw;
+    min-width: 120px;
+  }
+
+  .turn-countdown {
+    width: 38px;
+    height: 38px;
+    font-size: 0.94rem;
+  }
+
+  .landlord-crown {
+    top: -30px;
+    font-size: 2.15rem;
+  }
+
+  .phase-overlay {
+    min-width: 92vw;
+    min-height: 125px;
+  }
+
+  .bid-bubble {
+    min-width: 92px;
+    font-size: 1.45rem;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .card-counter {
+    top: 2px;
+    right: auto;
+    left: 50%;
+    max-width: 47vw;
+    padding: 3px 5px;
+    transform: translateX(-50%);
+  }
+
+  .counter-title { display: none; }
+
+  .table-surface:has(.card-counter:not([hidden])) .bottom-card-zone {
+    top: 52px;
+  }
+
+  .play-zone-left,
+  .play-zone-right {
+    top: 92px;
+  }
+
+  .play-zone-left { left: 18vw; }
+  .play-zone-right { right: 18vw; }
+
+  .play-zone-human {
+    bottom: calc(var(--card-height) + 116px + var(--safe-bottom));
+  }
+
+  .player-play-zone {
+    min-height: 46px;
+  }
+
+  .bid-bubble {
+    min-width: 98px;
+    padding: 10px 15px;
+    font-size: 1.5rem;
+  }
+
+  .human-seat .bid-bubble { top: -68px; }
+  .phase-overlay { min-height: 105px; }
+}
+
+/* 2026-07 倍率流程与座位强化 */
+.table-surface::after {
+  content: "麒麟斗地主";
+  letter-spacing: 0.15em;
+}
+
+.play-zone-countdown {
+  z-index: 8;
+  display: grid;
+  width: 92px;
+  height: 92px;
+  place-items: center;
+  color: #fff8de;
+  background: conic-gradient(var(--gold-400), #bd7b15 70%, rgba(2, 36, 27, 0.96) 71%);
+  border: 6px solid #fff2bf;
+  border-radius: 50%;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), 0 0 30px rgba(242, 198, 109, 0.55);
+  font-size: 2.3rem;
+  font-weight: 950;
+  font-variant-numeric: tabular-nums;
+  animation: turn-pulse 1.25s ease-in-out infinite;
+}
+
+.play-zone-countdown.is-urgent {
+  color: white;
+  background: #c93f35;
+  border-color: #ffd1cc;
+  animation: urgent-countdown 650ms ease-in-out infinite;
+}
+
+.player-play-zone:has(.play-zone-countdown) {
+  min-width: 112px;
+  min-height: 112px;
+  opacity: 1;
+  background: rgba(2, 31, 23, 0.66);
+  border-color: rgba(242, 198, 109, 0.48);
+}
+
+.multiplier-actions .button {
+  min-width: 128px;
+}
+
+.phase-overlay[data-tone="bidding"],
+.phase-overlay[data-tone="multiplier"] {
+  min-height: 138px;
+  background: radial-gradient(circle, rgba(255, 240, 183, 0.96), rgba(221, 165, 50, 0.93) 52%, transparent 74%);
+}
+
+@media (min-width: 1021px) and (min-height: 600px) {
+  .human-seat {
+    right: auto;
+    bottom: max(26px, var(--safe-bottom));
+    left: max(24px, calc(var(--safe-left) + 2vw));
+    min-width: 340px;
+    min-height: 112px;
+    gap: 18px;
+    padding: 14px 22px 14px 16px;
+    transform: none;
+  }
+
+  .human-seat.is-current,
+  .human-seat.current-turn,
+  .human-seat[aria-current="true"],
+  .human-seat.is-active {
+    transform: translateY(-3px);
+  }
+
+  .human-seat .avatar {
+    width: 92px;
+    height: 92px;
+    border-width: 4px;
+  }
+
+  .human-seat .player-name { font-size: 1.35rem; }
+  .human-seat .role-badge { min-height: 26px; padding-inline: 9px; font-size: 0.72rem; }
+  .human-seat .player-coins { font-size: 0.95rem; }
+  .human-seat .player-coins .kirin-coin { width: 24px; height: 24px; font-size: 0.72rem; }
+  .human-seat .card-count, .human-seat .card-count strong { font-size: 1.05rem; }
+  .human-seat .player-status { max-width: 170px; font-size: 0.8rem; }
+  .human-seat .landlord-crown { top: -48px; left: 25px; font-size: 3.7rem; }
+}
+
+@media (max-width: 1020px) {
+  .human-seat {
+    right: auto;
+    left: max(10px, var(--safe-left));
+    bottom: calc(var(--card-height) + 92px + var(--safe-bottom));
+    min-width: 180px;
+    transform: none;
+  }
+
+  .human-seat.is-current,
+  .human-seat.is-active { transform: translateY(-2px); }
+
+  .play-zone-countdown {
+    width: 72px;
+    height: 72px;
+    border-width: 4px;
+    font-size: 1.8rem;
+  }
+
+  .player-play-zone:has(.play-zone-countdown) {
+    min-width: 86px;
+    min-height: 86px;
+  }
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+  .human-seat {
+    left: max(8px, var(--safe-left));
+    bottom: calc(var(--card-height) + 116px + var(--safe-bottom));
+    min-width: 148px;
+  }
+
+  .multiplier-actions .button {
+    min-width: 0;
+    padding-inline: 5px;
+    font-size: 0.66rem;
+  }
+
+  .play-zone-countdown {
+    width: 64px;
+    height: 64px;
+    font-size: 1.55rem;
+  }
+}
+
+/* ===== 2026-07 蓝金牌桌、统一座位与回合指针 ===== */
+.game-screen {
+  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+  background: #06182d;
+}
+
+.game-hud {
+  background:
+    linear-gradient(90deg, rgba(224, 168, 55, 0.12), transparent 18% 82%, rgba(224, 168, 55, 0.12)),
+    linear-gradient(180deg, #082a4a, #061b33 78%, #041426);
+  border-bottom: 2px solid rgba(244, 190, 77, 0.55);
+  box-shadow: 0 8px 28px rgba(0, 8, 24, 0.42), inset 0 -1px rgba(255, 226, 146, 0.14);
+}
+
+.table-surface {
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(32, 154, 214, 0.55) 0%, rgba(13, 92, 157, 0.18) 38%, transparent 66%),
+    radial-gradient(circle at 50% 104%, rgba(54, 173, 217, 0.24), transparent 42%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 13px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 13px),
+    linear-gradient(145deg, #0b5894 0%, #07467e 48%, #042c59 100%);
+  box-shadow: inset 0 0 150px rgba(0, 10, 35, 0.7), inset 0 28px 70px rgba(18, 124, 184, 0.2);
+}
+
+.table-surface::before {
+  inset: clamp(10px, 1.5vw, 22px);
+  border: 2px solid rgba(242, 193, 80, 0.38);
+  border-radius: min(4vw, 42px);
+  box-shadow:
+    inset 0 0 0 5px rgba(3, 31, 72, 0.36),
+    inset 0 0 34px rgba(102, 201, 238, 0.11),
+    0 0 0 1px rgba(255, 239, 190, 0.08);
+}
+
+.table-surface::after {
+  width: min(48vw, 680px);
+  aspect-ratio: 2.2;
+  content: "";
+  background:
+    radial-gradient(ellipse, rgba(83, 194, 233, 0.11), transparent 62%),
+    repeating-radial-gradient(ellipse, rgba(255, 255, 255, 0.024) 0 2px, transparent 2px 13px);
+  border: 2px solid rgba(149, 220, 244, 0.07);
+  box-shadow: inset 0 0 45px rgba(96, 205, 238, 0.05), 0 0 55px rgba(4, 29, 74, 0.24);
+}
+
+.table-rail {
+  border: 7px solid rgba(3, 18, 42, 0.72);
+  box-shadow: inset 0 0 0 2px rgba(240, 185, 67, 0.25), inset 0 0 42px rgba(0, 9, 33, 0.36);
+}
+
+.table-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.felt-brand {
+  position: absolute;
+  top: 49%;
+  left: 50%;
+  color: rgba(173, 228, 245, 0.105);
+  font-family: "KaiTi", "STKaiti", "Microsoft YaHei", sans-serif;
+  font-size: clamp(2.5rem, 6.4vw, 6.8rem);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-shadow: 0 3px 0 rgba(0, 25, 67, 0.24), 0 0 34px rgba(96, 210, 244, 0.08);
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.felt-brand::before {
+  position: absolute;
+  bottom: 105%;
+  left: 50%;
+  content: "♠  ♥  ♣  ♦";
+  color: rgba(188, 232, 246, 0.07);
+  font-family: Georgia, serif;
+  font-size: 0.52em;
+  letter-spacing: 0.35em;
+  transform: translateX(-50%);
+}
+
+.felt-suit {
+  position: absolute;
+  color: rgba(154, 219, 244, 0.045);
+  font-family: Georgia, serif;
+  font-size: clamp(5rem, 12vw, 12rem);
+  line-height: 1;
+  filter: drop-shadow(0 4px 0 rgba(0, 29, 72, 0.28));
+}
+
+.felt-suit-spade { top: 15%; left: 24%; transform: rotate(-15deg); }
+.felt-suit-heart { top: 17%; right: 23%; transform: rotate(14deg); }
+.felt-suit-club { bottom: 12%; left: 31%; transform: rotate(11deg); }
+.felt-suit-diamond { right: 27%; bottom: 11%; transform: rotate(-10deg); }
+
+.player-seat {
+  background:
+    linear-gradient(135deg, rgba(4, 36, 73, 0.96), rgba(5, 61, 101, 0.91)),
+    #052a53;
+  border: 2px solid rgba(157, 218, 241, 0.3);
+  box-shadow: 0 12px 30px rgba(0, 10, 35, 0.42), inset 0 1px rgba(255, 255, 255, 0.09);
+}
+
+.player-seat.is-active {
+  border-color: #ffd56a;
+  box-shadow: 0 0 0 3px rgba(255, 206, 83, 0.2), 0 0 34px rgba(255, 190, 44, 0.38), 0 12px 30px rgba(0, 10, 35, 0.5);
+}
+
+.player-seat.is-landlord {
+  background:
+    radial-gradient(circle at 14% 30%, rgba(255, 222, 117, 0.2), transparent 34%),
+    linear-gradient(135deg, rgba(50, 35, 75, 0.98), rgba(106, 51, 45, 0.94));
+  border: 3px solid #f4c657;
+  box-shadow: 0 0 0 3px rgba(255, 221, 119, 0.13), 0 0 38px rgba(255, 189, 48, 0.45), 0 15px 34px rgba(0, 8, 30, 0.52);
+}
+
+.player-seat.is-landlord::before {
+  position: absolute;
+  top: -14px;
+  right: 14px;
+  z-index: 13;
+  padding: 5px 13px;
+  content: "地主阵营";
+  color: #3c2100;
+  background: linear-gradient(180deg, #fff0a7, #e9a72e);
+  border: 2px solid #fff5c9;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 22px rgba(255, 202, 72, 0.42);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.player-seat.is-landlord .avatar {
+  border-color: #ffe392;
+  box-shadow: 0 0 0 4px rgba(255, 202, 65, 0.18), 0 0 25px rgba(255, 196, 48, 0.5);
+}
+
+.player-seat .avatar-photo {
+  background: #d8eff8;
+  border-color: rgba(255, 247, 218, 0.9);
+  box-shadow: 0 0 0 3px rgba(104, 207, 242, 0.16), 0 6px 17px rgba(0, 9, 32, 0.48);
+}
+
+.player-seat .avatar-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.08) contrast(1.04) brightness(1.05);
+}
+
+.opponent-card-fan {
+  right: -16px;
+  bottom: -39px;
+  display: flex;
+  width: 178px;
+  height: 48px;
+  align-items: flex-end;
+  overflow: visible;
+  transform: rotate(2deg);
+}
+
+.seat-right .opponent-card-fan {
+  right: auto;
+  left: -16px;
+  transform: rotate(-2deg);
+}
+
+.opponent-card-fan .playing-card {
+  --card-width: 28px;
+  --card-height: 41px;
+  width: var(--card-width);
+  height: var(--card-height);
+  min-width: var(--card-width);
+  flex: 0 0 var(--card-width);
+  margin-left: -20px;
+  border-width: 1px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.34);
+}
+
+.opponent-card-fan .playing-card:first-child { margin-left: 0; }
+.opponent-card-fan .playing-card::before { inset: 3px; border-radius: 2px; }
+
+.bid-bubble {
+  color: #3a2100;
+  background: linear-gradient(180deg, #fff3b7, #e6aa35);
+  border-color: #fff8d5;
+  box-shadow: 0 8px 30px rgba(0, 7, 30, 0.5), 0 0 28px rgba(255, 201, 68, 0.56);
+}
+
+.turn-pointer {
+  --pointer-angle: 0deg;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 34;
+  display: grid;
+  min-width: 190px;
+  place-items: center;
+  gap: 3px;
+  color: #fff1b7;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 7px 10px rgba(0, 8, 34, 0.6));
+}
+
+.turn-pointer[hidden] { display: none; }
+.turn-pointer[data-player="0"] { --pointer-angle: 135deg; }
+.turn-pointer[data-player="1"] { --pointer-angle: 225deg; }
+.turn-pointer[data-player="2"] { --pointer-angle: 315deg; }
+.turn-pointer[data-phase="bidding"] { top: 90%; }
+.turn-pointer[data-phase="landlordReveal"] { top: 90%; }
+
+.turn-pointer-arrow {
+  display: grid;
+  width: 74px;
+  height: 74px;
+  place-items: center;
+  color: #ffd157;
+  background: radial-gradient(circle, rgba(9, 48, 89, 0.94) 0 45%, rgba(5, 25, 60, 0.55) 46% 65%, transparent 66%);
+  border: 2px solid rgba(255, 218, 112, 0.6);
+  border-radius: 50%;
+  font-family: Georgia, serif;
+  font-size: 3.3rem;
+  line-height: 1;
+  text-shadow: 0 0 16px rgba(255, 210, 73, 0.7);
+  transform: rotate(var(--pointer-angle));
+  animation: pointer-beat 1.05s ease-in-out infinite;
+}
+
+.turn-pointer strong {
+  padding: 6px 13px;
+  color: #fff6d9;
+  background: linear-gradient(180deg, rgba(9, 52, 94, 0.96), rgba(4, 29, 67, 0.96));
+  border: 1px solid rgba(255, 213, 94, 0.55);
+  border-radius: 999px;
+  box-shadow: 0 5px 16px rgba(0, 8, 31, 0.48);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.phase-overlay {
+  z-index: 40;
+}
+
+.player-play-zone.is-empty:not(:has(.play-zone-countdown)) {
+  opacity: 0;
+  background: transparent;
+  border-color: transparent;
+}
+
+@keyframes pointer-beat {
+  0%, 100% { scale: 1; opacity: 0.9; }
+  50% { scale: 1.13; opacity: 1; }
+}
+
+@media (min-width: 1021px) and (min-height: 600px) {
+  .player-seat,
+  .human-seat {
+    width: 340px;
+    min-width: 340px;
+    min-height: 112px;
+    gap: 18px;
+    padding: 14px 22px 14px 16px;
+  }
+
+  .player-seat .avatar,
+  .human-seat .avatar {
+    width: 92px;
+    height: 92px;
+    border-width: 4px;
+  }
+
+  .player-seat .player-name { font-size: 1.35rem; }
+  .player-seat .role-badge { min-height: 26px; padding-inline: 9px; font-size: 0.72rem; }
+  .player-seat .player-coins { font-size: 0.95rem; }
+  .player-seat .player-coins .kirin-coin { width: 24px; height: 24px; font-size: 0.72rem; }
+  .player-seat .card-count, .player-seat .card-count strong { font-size: 1.05rem; }
+  .player-seat .player-status { display: block; max-width: 170px; font-size: 0.8rem; }
+  .player-seat .landlord-crown { top: -54px; left: 26px; font-size: 4rem; }
+
+  .seat-left { top: clamp(92px, 13vh, 128px); left: max(24px, calc(var(--safe-left) + 2vw)); }
+  .seat-right { top: clamp(92px, 13vh, 128px); right: max(24px, calc(var(--safe-right) + 2vw)); }
+}
+
+@media (max-width: 1020px) {
+  .player-seat,
+  .human-seat {
+    width: 180px;
+    min-width: 180px;
+    min-height: 76px;
+    gap: 9px;
+    padding: 8px 10px;
+  }
+
+  .player-seat .avatar,
+  .human-seat .avatar { width: 58px; height: 58px; }
+  .player-seat .player-name { font-size: 0.86rem; }
+  .opponent-card-fan { bottom: -31px; width: 150px; }
+  .opponent-card-fan .playing-card { --card-width: 23px; --card-height: 34px; margin-left: -17px; }
+  .turn-pointer-arrow { width: 58px; height: 58px; font-size: 2.6rem; }
+  .turn-pointer strong { font-size: 0.7rem; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .player-seat,
+  .human-seat {
+    width: 190px;
+    min-width: 190px;
+    min-height: 70px;
+    padding: 7px 10px;
+  }
+
+  .player-seat .avatar,
+  .human-seat .avatar { width: 54px; height: 54px; }
+  .player-seat .player-name { font-size: 0.82rem; }
+  .human-seat { bottom: calc(var(--card-height) + 74px + var(--safe-bottom)); }
+  .turn-pointer { top: 48%; }
+  .turn-pointer[data-phase="bidding"],
+  .turn-pointer[data-phase="landlordReveal"] { top: 108%; }
+  .turn-pointer-arrow { width: 50px; height: 50px; font-size: 2.2rem; }
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+  .player-seat,
+  .human-seat {
+    width: 172px;
+    min-width: 172px;
+    min-height: 76px;
+  }
+
+  .seat-left { left: max(7px, var(--safe-left)); }
+  .seat-right { right: max(7px, var(--safe-right)); }
+  .player-seat .avatar,
+  .human-seat .avatar { width: 52px; height: 52px; }
+  .player-seat.is-landlord::before { top: -11px; right: 7px; padding: 3px 8px; font-size: 0.61rem; }
+  .opponent-card-fan { bottom: -28px; width: 142px; }
+  .opponent-card-fan .playing-card { --card-width: 21px; --card-height: 31px; margin-left: -15px; }
+  .felt-brand { top: 48%; font-size: clamp(2rem, 11vw, 3.2rem); }
+  .turn-pointer { min-width: 150px; }
+  .turn-pointer-arrow { width: 52px; height: 52px; font-size: 2.25rem; }
+  .turn-pointer[data-phase="bidding"],
+  .turn-pointer[data-phase="landlordReveal"] { top: 88%; }
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+  .opponent-card-fan { bottom: -90px; }
+}
+
+/* ===== 托管、独立牌背区与动态时间环 ===== */
+.autoplay-toggle.is-active,
+.autoplay-toggle[aria-pressed="true"] {
+  color: #2e1b00;
+  background: linear-gradient(180deg, #ffe88e, #e7a72d);
+  border-color: #fff3bd;
+  box-shadow: 0 0 22px rgba(255, 196, 55, 0.45), inset 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.autoplay-indicator {
+  position: absolute;
+  top: max(70px, calc(var(--safe-top) + 62px));
+  left: 50%;
+  z-index: 120;
+  display: grid;
+  min-width: min(88vw, 430px);
+  justify-items: center;
+  padding: 10px 20px;
+  color: #2f1c00;
+  background: linear-gradient(180deg, rgba(255, 240, 171, 0.98), rgba(229, 164, 44, 0.98));
+  border: 2px solid #fff4c5;
+  border-radius: 14px;
+  box-shadow: 0 10px 32px rgba(0, 7, 28, 0.55), 0 0 28px rgba(255, 191, 48, 0.35);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.autoplay-indicator[hidden] { display: none; }
+.autoplay-indicator strong { font-size: 1rem; font-weight: 950; letter-spacing: 0.08em; }
+.autoplay-indicator span { margin-top: 2px; font-size: 0.68rem; font-weight: 750; }
+
+.game-screen .table-surface {
+  transition: filter 240ms ease;
+}
+
+.game-screen.is-autoplay .table-surface {
+  filter: brightness(0.67) saturate(0.76);
+}
+
+.game-screen.is-autoplay .autoplay-indicator {
+  animation: autoplay-breathe 1.8s ease-in-out infinite;
+}
+
+.opponent-card-fan,
+.seat-right .opponent-card-fan {
+  right: auto;
+  bottom: -49px;
+  left: 0;
+  display: flex;
+  width: 100%;
+  height: 44px;
+  align-items: flex-start;
+  justify-content: center;
+  transform: none;
+}
+
+.opponent-card-fan .playing-card {
+  transform: none;
+}
+
+@property --turn-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 360deg;
+}
+
+.play-zone-countdown {
+  --countdown-color: #ffd45f;
+  background:
+    radial-gradient(circle, #0b3158 0 55%, rgba(5, 23, 52, 0.96) 56% 62%, transparent 63%),
+    conic-gradient(from -90deg, var(--countdown-color) 0deg var(--turn-angle), rgba(6, 27, 59, 0.88) var(--turn-angle) 360deg);
+  border-color: #fff0b0;
+  animation: countdown-sweep 1s linear forwards, turn-pulse 1.25s ease-in-out infinite;
+}
+
+.play-zone-countdown.is-urgent {
+  --countdown-color: #ff574b;
+  color: white;
+  background:
+    radial-gradient(circle, #721d25 0 55%, #3d1118 56% 62%, transparent 63%),
+    conic-gradient(from -90deg, var(--countdown-color) 0deg var(--turn-angle), rgba(60, 12, 19, 0.9) var(--turn-angle) 360deg);
+  border-color: #ffd1cc;
+  animation: countdown-sweep 1s linear forwards, urgent-countdown 650ms ease-in-out infinite;
+}
+
+@keyframes countdown-sweep {
+  to { --turn-angle: var(--turn-next-angle); }
+}
+
+@keyframes autoplay-breathe {
+  0%, 100% { box-shadow: 0 10px 32px rgba(0, 7, 28, 0.55), 0 0 20px rgba(255, 191, 48, 0.28); }
+  50% { box-shadow: 0 10px 32px rgba(0, 7, 28, 0.55), 0 0 38px rgba(255, 211, 96, 0.58); }
+}
+
+@media (min-width: 1021px) and (min-height: 600px) {
+  .play-zone-left {
+    top: clamp(220px, 31vh, 285px);
+    left: clamp(395px, 30vw, 485px);
+    max-width: 28vw;
+  }
+
+  .play-zone-right {
+    top: clamp(220px, 31vh, 285px);
+    right: clamp(395px, 30vw, 485px);
+    max-width: 28vw;
+  }
+}
+
+@media (max-width: 1020px) and (orientation: landscape) {
+  .play-zone-left { top: 145px; left: 220px; }
+  .play-zone-right { top: 145px; right: 220px; }
+  .opponent-card-fan,
+  .seat-right .opponent-card-fan { bottom: -29px; height: 29px; }
+  .opponent-card-fan .playing-card {
+    --card-width: 18px;
+    --card-height: 27px;
+    margin-left: -13px;
+  }
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+  .hud-actions { gap: 3px; }
+  .hud-button { width: 38px; min-width: 38px; }
+  .opponent-card-fan,
+  .seat-right .opponent-card-fan { bottom: -56px; }
+  .card-counter { top: 190px; }
+  .table-surface:has(.card-counter:not([hidden])) .bottom-card-zone { top: 266px; }
+  .play-zone-left,
+  .play-zone-right,
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-left,
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-right { top: 352px; }
+  .autoplay-indicator { top: 60px; min-width: 82vw; padding: 7px 12px; }
+  .autoplay-indicator strong { font-size: 0.82rem; }
+  .autoplay-indicator span { font-size: 0.58rem; }
+}
+
+/* Blue-and-gold announcement treatment: bidding, multipliers, landlord reveal and settlement. */
+.phase-overlay {
+  position: relative;
+  z-index: 40;
+  min-width: min(74vw, 560px);
+  min-height: 146px;
+  overflow: hidden;
+  color: #effaff;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(123, 215, 249, 0.28), transparent 34%),
+    radial-gradient(circle at 86% 82%, rgba(255, 207, 93, 0.13), transparent 32%),
+    linear-gradient(145deg, rgba(10, 94, 157, 0.98), rgba(5, 53, 105, 0.98) 56%, rgba(3, 28, 72, 0.98));
+  border: 2px solid rgba(255, 213, 109, 0.76);
+  border-radius: 28px;
+  box-shadow:
+    0 16px 42px rgba(0, 7, 32, 0.53),
+    0 0 0 5px rgba(92, 194, 237, 0.07),
+    inset 0 1px rgba(242, 251, 255, 0.2),
+    inset 0 -24px 44px rgba(0, 13, 50, 0.28);
+  filter: none;
+}
+
+.phase-overlay::before,
+.phase-overlay::after {
+  position: absolute;
+  z-index: 0;
+  content: "";
+  border: 1px solid rgba(180, 229, 247, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.phase-overlay::before {
+  top: -92px;
+  left: -62px;
+  width: 220px;
+  height: 220px;
+  box-shadow: 0 0 0 18px rgba(171, 228, 248, 0.028), 0 0 0 37px rgba(171, 228, 248, 0.02);
+}
+
+.phase-overlay::after {
+  right: -62px;
+  bottom: -98px;
+  width: 205px;
+  height: 205px;
+  border-color: rgba(255, 214, 110, 0.13);
+  box-shadow: 0 0 0 17px rgba(255, 214, 110, 0.022), 0 0 0 35px rgba(255, 214, 110, 0.017);
+}
+
+.phase-overlay strong,
+.phase-overlay span {
+  position: relative;
+  z-index: 1;
+}
+
+.phase-overlay strong {
+  color: #fff6d6;
+  letter-spacing: 0.07em;
+  text-shadow: 0 2px 0 rgba(1, 20, 53, 0.62), 0 0 22px rgba(125, 215, 249, 0.25);
+}
+
+.phase-overlay span {
+  color: #fff9e9;
+  background:
+    radial-gradient(circle at 35% 28%, rgba(105, 201, 239, 0.58), transparent 35%),
+    linear-gradient(145deg, #0d669f, #073d78 68%, #062950);
+  border-color: #ffe5a0;
+  box-shadow: 0 6px 20px rgba(0, 6, 29, 0.5), inset 0 1px rgba(244, 252, 255, 0.26), 0 0 20px rgba(255, 202, 74, 0.16);
+  text-shadow: 0 2px rgba(0, 20, 55, 0.7);
+}
+
+.phase-overlay[data-tone="bidding"],
+.phase-overlay[data-tone="multiplier"] {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(137, 220, 249, 0.33), transparent 35%),
+    radial-gradient(circle at 80% 86%, rgba(255, 210, 93, 0.15), transparent 32%),
+    linear-gradient(145deg, #0c6faf, #07508e 58%, #062d63);
+}
+
+.phase-overlay[data-tone="landlord"] {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 220, 123, 0.2), transparent 34%),
+    radial-gradient(circle at 15% 86%, rgba(99, 208, 244, 0.22), transparent 35%),
+    linear-gradient(145deg, #115b9a, #0a3977 53%, #062552);
+  border-color: #ffe49a;
+  box-shadow: 0 16px 42px rgba(0, 7, 32, 0.53), 0 0 0 5px rgba(255, 209, 103, 0.1), inset 0 1px rgba(255, 251, 229, 0.22);
+}
+
+.phase-overlay[data-tone="win"] {
+  color: #effcff;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 220, 119, 0.24), transparent 36%),
+    radial-gradient(circle at 86% 82%, rgba(91, 205, 242, 0.22), transparent 35%),
+    linear-gradient(145deg, #0c75af, #07528e 56%, #063063);
+}
+
+.phase-overlay[data-tone="lose"] {
+  color: #effaff;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(126, 207, 246, 0.25), transparent 34%),
+    radial-gradient(circle at 86% 82%, rgba(255, 210, 105, 0.1), transparent 33%),
+    linear-gradient(145deg, #084d8a, #063467 56%, #041e49);
+  border-color: rgba(255, 213, 109, 0.62);
+}
+
+.phase-overlay[data-tone="lose"] span {
+  background: linear-gradient(145deg, #0a548e, #063364 72%);
+  border-color: #d1efff;
+}
+
+.bid-bubble {
+  color: #fff5d6;
+  background:
+    radial-gradient(circle at 25% 18%, rgba(147, 224, 249, 0.24), transparent 34%),
+    linear-gradient(145deg, #0d6ba7, #074776 70%, #052d5c);
+  border-color: #ffe39a;
+  box-shadow: 0 8px 30px rgba(0, 7, 30, 0.5), 0 0 24px rgba(89, 196, 239, 0.27), inset 0 1px rgba(247, 252, 255, 0.2);
+  text-shadow: 0 2px rgba(0, 20, 53, 0.65);
+}
+
+.pass-mark,
+.winner-empty-hand {
+  color: #ffe294;
+  text-shadow: 0 2px 7px rgba(0, 18, 52, 0.72), 0 0 14px rgba(87, 193, 236, 0.22);
+}
+
+.fx-layer.fx-burst,
+.table-surface.is-bombing .fx-layer,
+.table-surface.is-rocketing .fx-layer {
+  color: #fff5d8;
+  background:
+    radial-gradient(circle at 50% 43%, rgba(255, 207, 91, 0.32), transparent 26%),
+    radial-gradient(circle at 50% 43%, rgba(89, 196, 240, 0.25), transparent 48%);
+}
+
+.table-surface.is-rocketing .fx-layer {
+  background:
+    radial-gradient(circle at 50% 43%, rgba(255, 214, 102, 0.33), transparent 24%),
+    radial-gradient(circle at 50% 43%, rgba(74, 177, 236, 0.3), transparent 46%);
+}
+
+.fx-layer .fx-word,
+.fx-special-word {
+  color: #fff4cf;
+  background: linear-gradient(145deg, #0d6aa5, #073b74 72%, #052b5c);
+  border-color: #ffe6a1;
+  box-shadow: 0 0 34px rgba(85, 192, 239, 0.36), inset 0 1px rgba(247, 252, 255, 0.18);
+  text-shadow: 0 2px rgba(0, 18, 51, 0.68);
+}
+
+.table-surface.result-win::after {
+  background: radial-gradient(circle at 50% 45%, rgba(255, 221, 111, 0.16), transparent 55%);
+  box-shadow: inset 0 0 90px rgba(69, 173, 227, 0.16);
+}
+
+.table-surface.result-lose::after {
+  background: radial-gradient(circle at 50% 45%, rgba(76, 171, 225, 0.1), transparent 58%);
+  box-shadow: inset 0 0 110px rgba(0, 18, 64, 0.34);
+}
+
+.autoplay-indicator {
+  color: #fff4d3;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(124, 216, 248, 0.27), transparent 36%),
+    linear-gradient(145deg, rgba(10, 100, 159, 0.98), rgba(5, 50, 99, 0.98));
+  border-color: #ffe39a;
+  box-shadow: 0 10px 32px rgba(0, 7, 28, 0.55), 0 0 28px rgba(79, 190, 237, 0.28), inset 0 1px rgba(245, 252, 255, 0.18);
+}
+
+@media (max-width: 780px) {
+  .phase-overlay {
+    min-width: min(86vw, 460px);
+    min-height: 116px;
+    padding: 14px;
+    border-radius: 21px;
+  }
+
+  .phase-overlay span {
+    min-width: 56px;
+    min-height: 56px;
+    border-width: 2px;
+    font-size: clamp(1.35rem, 7vw, 2.15rem);
+  }
+}
+
+/* ===== 2026-07 手机空间分区：最终响应式布局层 =====
+   旧媒体查询保留用于桌面兼容；以下规则统一接管低高度横屏与手机竖屏，
+   每个功能区使用固定的空间带，避免座位、出牌、操作和手牌互相覆盖。 */
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .game-screen:not([hidden]) {
+    grid-template-rows: 46px minmax(0, 1fr);
+  }
+
+  .game-hud {
+    padding: max(3px, var(--safe-top)) max(7px, var(--safe-right)) 3px max(7px, var(--safe-left));
+  }
+
+  .hud-actions { gap: 4px; }
+  .hud-button {
+    width: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+  }
+  .hud-button-label,
+  .difficulty-badge { display: none; }
+  .round-status { min-width: 150px; gap: 6px; }
+  .phase-chip { min-height: 27px; padding: 4px 9px; }
+  .bid-summary { max-width: 104px; font-size: 0.61rem; }
+
+  .seat-left,
+  .seat-right {
+    top: 8px;
+  }
+
+  .seat-left { left: max(8px, var(--safe-left)); }
+  .seat-right { right: max(8px, var(--safe-right)); }
+
+  .player-seat,
+  .human-seat {
+    width: clamp(136px, 23vw, 190px);
+    min-width: clamp(136px, 23vw, 190px);
+    min-height: 68px;
+    gap: 8px;
+    padding: 6px 9px;
+  }
+
+  .player-seat .avatar,
+  .human-seat .avatar {
+    width: 50px;
+    height: 50px;
+  }
+
+  .player-seat .player-name { font-size: 0.8rem; }
+  .player-seat .player-status { display: none; }
+  .player-seat .bid-bubble { display: none !important; }
+
+  .player-seat .landlord-crown,
+  .human-seat .landlord-crown {
+    top: 2px;
+    left: 5px;
+    font-size: 1.8rem;
+  }
+
+  .human-seat {
+    right: auto;
+    bottom: calc(var(--card-height) + 18px + var(--safe-bottom));
+    left: max(8px, var(--safe-left));
+    transform: none;
+  }
+
+  .human-seat.is-current,
+  .human-seat.current-turn,
+  .human-seat[aria-current="true"],
+  .human-seat.is-active { transform: translateY(-2px); }
+
+  .opponent-card-fan,
+  .seat-right .opponent-card-fan {
+    bottom: -34px;
+    height: 32px;
+  }
+
+  .opponent-card-fan .playing-card {
+    --card-width: 19px;
+    --card-height: 28px;
+    margin-left: -14px;
+  }
+
+  .bottom-card-zone {
+    top: 2px;
+  }
+
+  .zone-heading { display: none; }
+  .bottom-cards {
+    min-height: 48px;
+    transform: scale(0.78);
+    transform-origin: top center;
+  }
+
+  .card-counter {
+    top: 82px;
+    right: auto;
+    left: 50%;
+    width: 44vw;
+    max-width: 44vw;
+    padding: 3px 5px;
+    overflow-x: auto;
+    transform: translateX(-50%);
+    scrollbar-width: none;
+  }
+  .card-counter::-webkit-scrollbar { display: none; }
+  .counter-title { display: none; }
+  .card-counter-list { width: max-content; flex-wrap: nowrap; }
+
+  .table-surface:has(.card-counter:not([hidden])) .bottom-card-zone {
+    top: 2px;
+  }
+
+  .play-zone-left,
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-left {
+    top: 124px;
+    right: auto;
+    left: clamp(148px, 25vw, 220px);
+    width: min(20vw, 132px);
+    max-width: min(20vw, 132px);
+  }
+
+  .play-zone-right,
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-right {
+    top: 124px;
+    right: clamp(148px, 25vw, 220px);
+    left: auto;
+    width: min(20vw, 132px);
+    max-width: min(20vw, 132px);
+  }
+
+  .play-zone-human {
+    right: max(8px, var(--safe-right));
+    bottom: calc(var(--card-height) + 18px + var(--safe-bottom));
+    left: auto;
+    max-width: 25vw;
+    transform: none;
+  }
+
+  .player-play-zone {
+    min-width: 74px;
+    min-height: 58px;
+    padding: 4px 6px;
+  }
+
+  .player-play-zone.is-empty:has(.mobile-action-bubble) {
+    opacity: 1;
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .mobile-action-bubble {
+    display: inline-grid;
+    min-width: 66px;
+    min-height: 42px;
+    padding: 5px 10px;
+    place-items: center;
+    color: #fff4c9;
+    background: linear-gradient(145deg, #0d6ba7, #052d5c);
+    border: 2px solid #ffe39a;
+    border-radius: 999px;
+    font-size: 1.05rem;
+    box-shadow: 0 5px 14px rgba(0, 12, 42, 0.42);
+  }
+
+  .play-zone-countdown {
+    width: 58px;
+    height: 58px;
+    border-width: 4px;
+    font-size: 1.45rem;
+  }
+
+  .player-play-zone:has(.play-zone-countdown) {
+    min-width: 72px;
+    min-height: 72px;
+  }
+
+  .table-center {
+    top: 118px;
+    right: 29%;
+    bottom: calc(var(--card-height) + 90px + var(--safe-bottom));
+    left: 29%;
+    min-height: 70px;
+  }
+
+  .turn-pointer { min-width: 0; }
+  .turn-pointer-arrow { width: 40px; height: 40px; font-size: 1.7rem; }
+  .turn-pointer strong { display: none; }
+
+  .phase-overlay,
+  .phase-overlay[data-tone="bidding"],
+  .phase-overlay[data-tone="multiplier"] {
+    min-width: min(48vw, 360px);
+    min-height: 84px;
+    padding: 9px 12px;
+    border-radius: 17px;
+  }
+  .phase-overlay span { min-width: 46px; min-height: 46px; font-size: 1.35rem; }
+
+  .interaction-zone {
+    right: 26%;
+    bottom: calc(var(--card-height) + 44px + var(--safe-bottom));
+    left: 26%;
+  }
+  .selection-status { min-height: 17px; margin-bottom: 2px; font-size: 0.57rem; }
+  .action-bar { width: min(100%, 284px); gap: 4px; padding: 4px; }
+  .action-bar .button,
+  .bidding-actions .bid-button,
+  .multiplier-actions .button {
+    min-width: 0;
+    min-height: 44px;
+    flex: 1 1 0;
+    padding: 6px 8px;
+    font-size: 0.69rem;
+  }
+
+  .hand-zone {
+    right: max(3px, var(--safe-right));
+    bottom: max(2px, var(--safe-bottom));
+    left: max(3px, var(--safe-left));
+    height: calc(var(--card-height) + 10px);
+  }
+
+  /* 600px 以下横屏会同时命中 cards.css 的手机负间距；矮屏牌宽只有约 36px，
+     旧的 -37px 间距会让后续牌反向堆叠。这里按横屏可用宽度重新展开手牌。 */
+  .human-hand .playing-card + .playing-card,
+  .human-hand.is-compact .playing-card + .playing-card,
+  .human-hand.is-ultra-compact .playing-card + .playing-card {
+    margin-left: -18px !important;
+  }
+
+  .human-hand .playing-card.is-selected:not(:first-child),
+  .human-hand .playing-card[aria-pressed="true"]:not(:first-child),
+  .human-hand .playing-card.is-selected + .playing-card,
+  .human-hand .playing-card[aria-pressed="true"] + .playing-card {
+    margin-left: 0 !important;
+  }
+
+  .autoplay-indicator {
+    top: max(5px, var(--safe-top));
+    min-width: 0;
+    width: auto;
+    max-width: 210px;
+    padding: 7px 15px;
+    border-radius: 999px;
+    transform: translateX(-50%);
+  }
+  .autoplay-indicator strong { font-size: 0.76rem; }
+  .autoplay-indicator span { display: none; }
+  .game-screen.is-autoplay .round-status { visibility: hidden; }
+}
+
+@media (orientation: portrait) and (max-width: 780px) {
+  .game-screen:not([hidden]) {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .game-hud {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 44px 25px;
+    gap: 2px 6px;
+    padding: max(3px, var(--safe-top)) max(6px, var(--safe-right)) 4px max(6px, var(--safe-left));
+  }
+
+  .hud-actions { gap: 3px; }
+  .hud-actions-left { grid-column: 1; grid-row: 1; }
+  .hud-actions-right { grid-column: 2; grid-row: 1; }
+  .round-status {
+    display: flex;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-width: 0;
+    flex-wrap: nowrap;
+    gap: 7px;
+  }
+  .hud-button {
+    width: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+  }
+  .hud-button-label,
+  .difficulty-badge { display: none; }
+  .phase-chip { min-height: 23px; padding: 2px 9px; font-size: 0.63rem; }
+  .bid-summary { max-width: min(58vw, 220px); font-size: 0.59rem; }
+
+  .table-surface::before { inset: 7px; border-radius: 20px; }
+
+  .player-seat,
+  .human-seat {
+    width: calc(50% - 14px);
+    min-width: 0;
+    min-height: 78px;
+    gap: 7px;
+    padding: 7px 8px;
+    border-radius: 15px;
+  }
+
+  .player-seat .avatar,
+  .human-seat .avatar {
+    width: 50px;
+    height: 50px;
+  }
+  .player-seat .player-name { max-width: 5.6em; font-size: 0.79rem; }
+  .player-seat .player-coins { font-size: 0.68rem; }
+  .player-seat .card-count,
+  .player-seat .card-count strong { font-size: 0.72rem; }
+  .player-seat .player-status { display: none; }
+  .player-seat .bid-bubble { display: none !important; }
+
+  .player-seat .landlord-crown,
+  .human-seat .landlord-crown {
+    top: 2px;
+    left: 5px;
+    font-size: 1.8rem;
+  }
+
+  .seat-left,
+  .seat-right { top: 12px; }
+  .seat-left { left: max(8px, var(--safe-left)); }
+  .seat-right { right: max(8px, var(--safe-right)); }
+
+  .opponent-card-fan,
+  .seat-right .opponent-card-fan {
+    bottom: -39px;
+    height: 36px;
+  }
+  .opponent-card-fan .playing-card {
+    --card-width: 21px;
+    --card-height: 31px;
+    margin-left: -15px;
+  }
+
+  .bottom-card-zone {
+    top: 132px;
+  }
+  .table-surface:has(.card-counter:not([hidden])) .bottom-card-zone {
+    top: 132px;
+  }
+  .zone-heading { margin-bottom: 2px; font-size: 0.58rem; }
+  .bottom-cards { min-height: 51px; transform: scale(0.82); transform-origin: top center; }
+
+  .card-counter {
+    top: 218px;
+    right: max(8px, var(--safe-right));
+    left: max(8px, var(--safe-left));
+    width: auto;
+    max-width: none;
+    gap: 4px;
+    padding: 4px 6px;
+    overflow-x: auto;
+    transform: none;
+    scrollbar-width: none;
+  }
+  .card-counter::-webkit-scrollbar { display: none; }
+  .counter-title { display: none; }
+  .card-counter-list {
+    width: max-content;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+  .counter-chip { min-width: 25px; padding: 1px 3px; }
+
+  .play-zone-left,
+  .play-zone-right {
+    top: 210px;
+    width: calc(50% - 18px);
+    max-width: none;
+    min-width: 0;
+    min-height: 72px;
+  }
+  .play-zone-left { left: max(8px, var(--safe-left)); }
+  .play-zone-right { right: max(8px, var(--safe-right)); }
+
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-left,
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-right {
+    top: 264px;
+  }
+
+  .human-seat {
+    top: auto;
+    right: auto;
+    bottom: clamp(150px, 25dvh, 220px);
+    left: max(8px, var(--safe-left));
+    transform: none;
+  }
+  .human-seat.is-current,
+  .human-seat.current-turn,
+  .human-seat[aria-current="true"],
+  .human-seat.is-active { transform: translateY(-2px); }
+
+  .play-zone-human {
+    top: auto;
+    right: max(8px, var(--safe-right));
+    bottom: clamp(150px, 25dvh, 220px);
+    left: auto;
+    width: calc(50% - 18px);
+    max-width: none;
+    min-width: 0;
+    min-height: 78px;
+    transform: none;
+  }
+
+  .play-zone-countdown {
+    width: 62px;
+    height: 62px;
+    border-width: 4px;
+    font-size: 1.5rem;
+  }
+  .player-play-zone:has(.play-zone-countdown) {
+    min-width: 76px;
+    min-height: 76px;
+  }
+
+  .player-play-zone.is-empty:has(.mobile-action-bubble) {
+    opacity: 1;
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .mobile-action-bubble {
+    display: inline-grid;
+    min-width: 78px;
+    min-height: 48px;
+    padding: 6px 12px;
+    place-items: center;
+    color: #fff4c9;
+    background: linear-gradient(145deg, #0d6ba7, #052d5c);
+    border: 2px solid #ffe39a;
+    border-radius: 999px;
+    font-size: 1.2rem;
+    box-shadow: 0 6px 16px rgba(0, 12, 42, 0.44);
+  }
+
+  .table-center {
+    top: 300px;
+    right: 9%;
+    bottom: clamp(290px, 39dvh, 340px);
+    left: 9%;
+    min-height: 108px;
+  }
+  .turn-pointer { min-width: 150px; }
+  .turn-pointer-arrow { width: 52px; height: 52px; font-size: 2.25rem; }
+  .turn-pointer strong { font-size: 0.67rem; }
+  .turn-pointer[data-phase="bidding"],
+  .turn-pointer[data-phase="landlordReveal"] { top: 78%; }
+
+  .phase-overlay,
+  .phase-overlay[data-tone="bidding"],
+  .phase-overlay[data-tone="multiplier"] {
+    min-width: min(82vw, 380px);
+    min-height: 108px;
+    padding: 12px 14px;
+    border-radius: 20px;
+  }
+  .phase-overlay span { min-width: 54px; min-height: 54px; font-size: 1.55rem; }
+
+  .interaction-zone {
+    right: max(8px, var(--safe-right));
+    bottom: clamp(96px, 14dvh, 120px);
+    left: max(8px, var(--safe-left));
+  }
+  .selection-status { min-height: 18px; margin-bottom: 3px; font-size: 0.59rem; }
+  .action-bar { width: 100%; max-width: 430px; gap: 5px; padding: 5px; }
+  .action-bar .button,
+  .bidding-actions .bid-button,
+  .multiplier-actions .button {
+    min-width: 0;
+    min-height: 48px;
+    flex: 1 1 0;
+    padding: 7px 5px;
+    font-size: 0.72rem;
+  }
+
+  .hand-zone {
+    right: max(3px, var(--safe-right));
+    bottom: max(3px, var(--safe-bottom));
+    left: max(3px, var(--safe-left));
+    height: calc(var(--card-height) + 16px);
+  }
+  .human-hand { width: calc(100vw - var(--safe-left) - var(--safe-right) - 6px); }
+
+  /* 竖屏按手牌数量分三级压缩：普通手牌保证点数可辨，地主 20 张时再逐步收紧。 */
+  .human-hand .playing-card + .playing-card {
+    margin-left: clamp(-28px, calc(-6.5vw - 0.5px), -23px) !important;
+  }
+
+  .human-hand.is-compact .playing-card + .playing-card {
+    margin-left: clamp(-29px, calc(-6.824vw - 0.5px), -24px) !important;
+  }
+
+  .human-hand.is-ultra-compact .playing-card + .playing-card {
+    margin-left: clamp(-31px, calc(-7.368vw - 0.5px), -25.7px) !important;
+  }
+
+  .autoplay-indicator {
+    top: calc(var(--safe-top) + 48px);
+    min-width: 0;
+    width: auto;
+    max-width: 70vw;
+    padding: 8px 17px;
+    border-radius: 999px;
+    transform: translateX(-50%);
+  }
+  .autoplay-indicator strong { font-size: 0.78rem; white-space: nowrap; }
+  .autoplay-indicator span { display: none; }
+  .game-screen.is-autoplay .round-status { visibility: hidden; }
+
+  .rotate-hint { display: none; }
+}
+
+@media (orientation: portrait) and (max-width: 380px) {
+  .hud-button { width: 38px; min-width: 38px; }
+  .player-seat,
+  .human-seat { width: calc(50% - 12px); min-height: 72px; padding: 6px; }
+  .player-seat .avatar,
+  .human-seat .avatar { width: 46px; height: 46px; }
+  .player-seat .role-badge { display: none; }
+  .bottom-card-zone { top: 124px; }
+  .table-surface:has(.card-counter:not([hidden])) .bottom-card-zone { top: 124px; }
+  .card-counter { top: 207px; }
+  .play-zone-left,
+  .play-zone-right { top: 198px; }
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-left,
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-right { top: 252px; }
+}
+
+@media (orientation: portrait) and (max-width: 780px) and (max-height: 700px) {
+  .player-seat,
+  .human-seat {
+    min-height: 64px;
+    gap: 5px;
+    padding: 5px 6px;
+  }
+
+  .player-seat .avatar,
+  .human-seat .avatar {
+    width: 42px;
+    height: 42px;
+  }
+
+  .seat-left,
+  .seat-right { top: 8px; }
+
+  .opponent-card-fan,
+  .seat-right .opponent-card-fan {
+    bottom: -34px;
+    height: 31px;
+  }
+
+  .opponent-card-fan .playing-card {
+    --card-width: 19px;
+    --card-height: 28px;
+    margin-left: -14px;
+  }
+
+  .bottom-card-zone,
+  .table-surface:has(.card-counter:not([hidden])) .bottom-card-zone {
+    top: 106px;
+  }
+
+  .bottom-cards {
+    min-height: 43px;
+    transform: scale(0.72);
+  }
+
+  .bottom-cards .playing-card {
+    --card-width: 32px;
+    --card-height: calc(var(--card-width) * 1.42);
+  }
+
+  .card-counter {
+    top: 174px;
+    padding-block: 2px;
+  }
+
+  .counter-chip {
+    min-width: 23px;
+    padding-block: 0;
+  }
+
+  .play-zone-left,
+  .play-zone-right,
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-left,
+  .table-surface:has(.card-counter:not([hidden])) .play-zone-right {
+    top: 190px;
+    min-height: 52px;
+    padding: 3px 5px;
+  }
+
+  .play-zone-countdown {
+    width: 48px;
+    height: 48px;
+    border-width: 3px;
+    font-size: 1.2rem;
+  }
+
+  .player-play-zone:has(.play-zone-countdown) {
+    min-width: 54px;
+    min-height: 54px;
+  }
+
+  .human-seat,
+  .play-zone-human {
+    bottom: 155px;
+  }
+
+  .play-zone-human {
+    min-height: 64px;
+  }
+
+  .interaction-zone {
+    bottom: 96px;
+  }
+
+  .selection-status { display: none; }
+
+  .action-bar {
+    padding: 4px;
+  }
+
+  .action-bar .button,
+  .bidding-actions .bid-button,
+  .multiplier-actions .button {
+    min-height: 44px;
+    padding-block: 5px;
+  }
+
+  .human-hand .playing-card.is-selected,
+  .human-hand .playing-card[aria-pressed="true"] {
+    transform: translateY(-12px) scale(0.92);
+  }
+
+  .table-center {
+    top: 264px;
+    bottom: 220px;
+    min-height: 58px;
+  }
+
+  .turn-pointer {
+    min-width: 0;
+  }
+
+  .turn-pointer-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 1.7rem;
+  }
+
+  .turn-pointer strong { display: none; }
+}
+
+@media (orientation: portrait) and (max-width: 780px) and (min-height: 701px) {
+  .turn-pointer { top: calc(50% + 30px); }
+}
+
+/* 极小屏已由头像高亮和出牌区倒计时明确提示当前玩家，隐藏冗余中央指针以释放空间。 */
+@media (orientation: landscape) and (max-height: 360px),
+       (orientation: portrait) and (max-width: 340px) and (max-height: 620px) {
+  .turn-pointer { display: none !important; }
 }
